@@ -10,19 +10,18 @@ if isempty(hold)
 end
 global data;
 
-[key_press, time, key_code] = KbCheck;
-key_1 = [KbName('control'), KbName('shift'), KbName('w')];
-key_2 = [KbName('control'), KbName('shift'), KbName('c')];
-key_3 = KbName('escape');
-key_4 = [KbName('control'), KbName('shift'), KbName('-_')];
-key_9 = [KbName('control'), KbName('shift'), KbName('q')];
-key_5 = [KbName('control'), KbName('shift'), KbName('r')];
-key_6 = [KbName('control'), KbName('shift'), KbName('l')];
-key_7 = [KbName('control'), KbName('shift'), KbName('s')];
-key_8 = [KbName('control'), KbName('shift'), KbName('f')];
+[key_press, ~, key_code] = KbCheck;
+free_reward_key = [KbName('control'), KbName('shift'), KbName('w')];
+custom_key = [KbName('control'), KbName('shift'), KbName('c')];
+slow_quit_key = KbName('escape');
+quit_key = [KbName('control'), KbName('shift'), KbName('q')];
+next_right_key = [KbName('control'), KbName('shift'), KbName('r')];
+next_left_key = [KbName('control'), KbName('shift'), KbName('l')];
+sound_key = [KbName('control'), KbName('shift'), KbName('s')];
+next_free_key = [KbName('control'), KbName('shift'), KbName('f')];
 
 if key_press
-    if min(key_code(key_1))
+    if min(key_code(free_reward_key))
         if last_press == 0
             psychsr_sound(6);
             fprintf('FREE REWARD\n')
@@ -32,7 +31,7 @@ if key_press
             data.card.dio.UserData = outdata;
             last_press = 1;
         end
-    elseif min(key_code(key_5))  % next stim right
+    elseif min(key_code(next_right_key))  % next stim right
         if last_press == 0
             data.stimuli.loc(k+1) = 2;
             
@@ -44,7 +43,7 @@ if key_press
             fprintf('NEXT STIM RIGHT\n')
             last_press = 1;
         end
-    elseif min(key_code(key_6)) % next stim left
+    elseif min(key_code(next_left_key)) % next stim left
         if last_press == 0
             data.stimuli.loc(k+1) = 1;
             
@@ -56,7 +55,7 @@ if key_press
             fprintf('NEXT STIM LEFT\n')
             last_press = 1;
         end
-    elseif min(key_code(key_8))
+    elseif min(key_code(next_free_key))
         if last_press == 0
             data.stimuli.loc(k+1) = 3;
             
@@ -64,23 +63,24 @@ if key_press
                 data.stimuli.id(k+1) = 3-data.stimuli.block(k+1);
             end
             
+            data.params.freeBlank = 1;
             data.userFlag = k+1;
             fprintf('NEXT STIM FREE\n')
             last_press = 1;
         end
-    elseif min(key_code(key_7))
+    elseif min(key_code(sound_key))
         if last_press == 0
             psychsr_sound(6);
             last_press = 1;
         end
-    elseif min(key_code(key_2))
+    elseif min(key_code(custom_key))
         if last_press == 0
             clear trackball_custom_code;
             trackball_custom_code(k);
             last_press = 1;
         end        
         % Hold Escape for 1 second to exit
-    elseif min(key_code(key_3))
+    elseif min(key_code(slow_quit_key))
         if hold == 0
             hold = tic;
         elseif toc(hold) > 1 && last_press == 0
@@ -96,7 +96,7 @@ if key_press
 %             last_press = 1;
 %         end
         % ctrl+shift+q to exit
-    elseif min(key_code(key_9))
+    elseif min(key_code(quit_key))
         if last_press == 0
             data.quitFlag = 2;
             disp('QUIT')

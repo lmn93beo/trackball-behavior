@@ -9,7 +9,7 @@ grey = data.screen.grey;
 w = X_pixels;
 d = data.stimuli.cursor(3);
 
-if data.params.flashStim > 0
+if data.params.flashStim > 0 && data.stimuli.loc(k) < 3
     x = data.stimuli.startPos(data.stimuli.loc(k));  
     x2 = data.stimuli.startPos(3 - data.stimuli.loc(k));
 end
