@@ -1,0 +1,13 @@
+RIG 3
+MOUSE  5 - Engage: 50%
+08:30 TRIAL 57
+
+
+*** Trial 58 ***
+      LAST10    TOTAL
+HIT%    60%    56% of 57
+FALSE% NaN%   NaN% of 0
+D-P    NaN   NaN
+DELAY%  50%    40% of 57
+LAST LICK: -00:04
+

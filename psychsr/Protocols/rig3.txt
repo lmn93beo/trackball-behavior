@@ -1,0 +1,10 @@
+RIG 3
+MOUSE  2 - Engage: 75%
+24:01 TRIAL 177
+
+      LAST10    TOTAL
+HIT%   100%    96% of 122
+FALSE% 100%    87% of 55
+DELAY% 100%    81% of 177
+LAST LICK: -00:00
+

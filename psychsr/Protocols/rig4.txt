@@ -1,0 +1,5 @@
+RIG 4
+MOUSE 17
+17:31 TRIAL 103
+LEFT%%     8%/ 76%/ 17% of  78  
+RIGHT%%    4%/ 67%/ 29% of  24  

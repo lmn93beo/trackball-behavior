@@ -1,0 +1,21 @@
+Features removed from train6 --> discrim.
+
+optional features removed (stimulus-related):
+-image during iti
+-movie during delay
+-dual screen functionality
+-visual cuing
+-valid/invalid cuing 
+-variable delay period
+-aperture (non-fullscreen) grating
+-randomized grating locations on screen
+-opposite screen distractor gratings
+-nontarget movies
+-grating overlaid/blended with movie
+-variable contrast
+-laser stimulation (response.mode = 3)
+
+optional features removed (response-related):
+-extend iti if keep licking during iti
+-abort if lick during delay
+-automatic changes in distractor grating contrast depending on performance
