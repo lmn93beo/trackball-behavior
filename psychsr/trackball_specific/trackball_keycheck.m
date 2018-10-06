@@ -1,5 +1,21 @@
 function trackball_keycheck(k)
 
+% k: trial number
+% Check which key has been pressed and performs the corresponding action
+% ------------- List of keys: --------------------
+% 'w' - free reward
+% 'escape' - quit after 1s hold
+% 'q' - quit
+% 'r' - next stim right
+% 'l' - next stim left
+% 's' - sound
+% 'f' - next stim free
+% 'c' - custom
+% 'g/h' - increment/decrement perRight by 0.1
+% 'v' - toggle antibiasConsecutive
+% 'm/n' - increment/decrement antibiasRepeat by 0.1
+% --------------------------------------------------
+
 persistent last_press
 persistent hold
 if isempty(last_press)
@@ -11,98 +27,175 @@ end
 global data;
 
 [key_press, ~, key_code] = KbCheck;
-free_reward_key = [KbName('control'), KbName('shift'), KbName('w')];
-custom_key = [KbName('control'), KbName('shift'), KbName('c')];
-slow_quit_key = KbName('escape');
-quit_key = [KbName('control'), KbName('shift'), KbName('q')];
-next_right_key = [KbName('control'), KbName('shift'), KbName('r')];
-next_left_key = [KbName('control'), KbName('shift'), KbName('l')];
-sound_key = [KbName('control'), KbName('shift'), KbName('s')];
-next_free_key = [KbName('control'), KbName('shift'), KbName('f')];
+
+
+
 
 if key_press
-    if min(key_code(free_reward_key))
-        if last_press == 0
-            psychsr_sound(6);
-            fprintf('FREE REWARD\n')
-            outdata = data.card.dio.UserData;
-            outdata.dt(1) = data.response.reward_time;
-            outdata.tstart(1) = NaN;
-            data.card.dio.UserData = outdata;
-            last_press = 1;
-        end
-    elseif min(key_code(next_right_key))  % next stim right
-        if last_press == 0
-            data.stimuli.loc(k+1) = 2;
-            
-            if data.params.actionValue == 0 && data.params.linkStimAction                
-                data.stimuli.id(k+1) = xor(data.stimuli.loc(k+1)-1,data.stimuli.block(k+1)-1)+1;
+    key_id_lst = find(key_code);
+
+    switch key_id_lst(1)
+        % 'w' - free reward
+        case KbName('w')
+            if last_press == 0
+                psychsr_sound(6);
+                fprintf('FREE REWARD\n')
+                outdata = data.card.dio.UserData;
+                outdata.dt(1) = data.response.reward_time;
+                outdata.tstart(1) = NaN;
+                data.card.dio.UserData = outdata;
+                last_press = 1;
             end
             
-            data.userFlag = k+1;
-            fprintf('NEXT STIM RIGHT\n')
-            last_press = 1;
-        end
-    elseif min(key_code(next_left_key)) % next stim left
-        if last_press == 0
-            data.stimuli.loc(k+1) = 1;
-            
-            if data.params.actionValue == 0 && data.params.linkStimAction                
-                data.stimuli.id(k+1) = xor(data.stimuli.loc(k+1)-1,data.stimuli.block(k+1)-1)+1;
+        % 'r' - next stim right
+        case KbName('r')  
+            if last_press == 0
+                data.stimuli.loc(k+1) = 2;
+
+                if data.params.actionValue == 0 && data.params.linkStimAction                
+                    data.stimuli.id(k+1) = xor(data.stimuli.loc(k+1)-1,data.stimuli.block(k+1)-1)+1;
+                end
+
+                data.userFlag = k+1;
+                fprintf('NEXT STIM RIGHT\n')
+                last_press = 1;
             end
             
-            data.userFlag = k+1;
-            fprintf('NEXT STIM LEFT\n')
-            last_press = 1;
-        end
-    elseif min(key_code(next_free_key))
-        if last_press == 0
-            data.stimuli.loc(k+1) = 3;
-            
-            if data.params.actionValue == 0 && data.params.linkStimAction                
-                data.stimuli.id(k+1) = 3-data.stimuli.block(k+1);
+        % 'l' - next stim left
+        case KbName('l')
+            if last_press == 0
+                data.stimuli.loc(k+1) = 1;
+
+                if data.params.actionValue == 0 && data.params.linkStimAction                
+                    data.stimuli.id(k+1) = xor(data.stimuli.loc(k+1)-1,data.stimuli.block(k+1)-1)+1;
+                end
+
+                data.userFlag = k+1;
+                fprintf('NEXT STIM LEFT\n')
+                last_press = 1;
             end
             
-            data.params.freeBlank = 1;
-            data.userFlag = k+1;
-            fprintf('NEXT STIM FREE\n')
-            last_press = 1;
-        end
-    elseif min(key_code(sound_key))
-        if last_press == 0
-            psychsr_sound(6);
-            last_press = 1;
-        end
-    elseif min(key_code(custom_key))
-        if last_press == 0
-            clear trackball_custom_code;
-            trackball_custom_code(k);
-            last_press = 1;
-        end        
+        % 'f' - next stim free
+        case KbName('f')
+            if last_press == 0
+                data.stimuli.loc(k+1) = 3;
+
+                if data.params.actionValue == 0 && data.params.linkStimAction                
+                    data.stimuli.id(k+1) = 3-data.stimuli.block(k+1);
+                end
+
+                data.params.freeBlank = 1;
+                data.userFlag = k+1;
+                fprintf('NEXT STIM FREE\n')
+                last_press = 1;
+            end
+            
+        % 's' - play sound
+        case KbName('s')
+            if last_press == 0
+                psychsr_sound(6);
+                last_press = 1;
+            end
+            
+        % 'c' - custom code
+        case KbName('c')
+            if last_press == 0
+                clear trackball_custom_code;
+                trackball_custom_code(k);
+                last_press = 1;
+            end
+            
         % Hold Escape for 1 second to exit
-    elseif min(key_code(slow_quit_key))
-        if hold == 0
-            hold = tic;
-        elseif toc(hold) > 1 && last_press == 0
-            data.quitFlag = 2;
-            disp('QUIT')
-            last_press = 1;
-            hold = 0;
-        end        
-%     elseif min(key_code(key_4))
-%         if last_press == 0
-%             data.easygain = data.easygain - 0.1;
-%             fprintf('Easygain decreased to %1.2f\n',data.easygain);
-%             last_press = 1;
-%         end
-        % ctrl+shift+q to exit
-    elseif min(key_code(quit_key))
-        if last_press == 0
-            data.quitFlag = 2;
-            disp('QUIT')
-            last_press = 1;
-        end;
+        case KbName('escape')
+            if hold == 0
+                hold = tic;
+            elseif toc(hold) > 1 && last_press == 0
+                data.quitFlag = 2;
+                disp('QUIT')
+                last_press = 1;
+                hold = 0;
+            end        
+    %     elseif min(key_code(key_4))
+    %         if last_press == 0
+    %             data.easygain = data.easygain - 0.1;
+    %             fprintf('Easygain decreased to %1.2f\n',data.easygain);
+    %             last_press = 1;
+    %         end
+            
+        % 'q' - exit
+        case KbName('q')
+            if last_press == 0
+                data.quitFlag = 2;
+                disp('QUIT')
+                last_press = 1;
+            end;
+            
+        % 'v' - toggle antibiasConsecutive
+        case KbName('v')
+            if last_press == 0
+                data.params.antibiasConsecutive = 1 - ...
+                    data.params.antibiasConsecutive;
+                fprintf('antibiasConsecutive toggled to %d\n', ...
+                    data.params.antibiasConsecutive);
+                last_press = 1;
+            end
+            
+        % 'h' - increment perRight
+        case KbName('h')
+            if last_press == 0
+                data.params.perRight = min(data.params.perRight + 0.1, 1);
+                fprintf('perRight incremented to %.2f\n', ...
+                    data.params.perRight);
+                
+                % Re-populate data.stimuli.loc
+                maxrepeat = floor(log(0.125)/log(abs(data.params.perRight-0.5)+0.5)); 
+                if maxrepeat<0; maxrepeat = Inf; end;
+                
+                data.stimuli.loc((k+1):end) = ...
+    psychsr_rand(1-data.params.perRight,data.params.numTrials - k,0,maxrepeat);
+                
+                
+                last_press = 1;
+            end
+        
+        % 'g' - decrement perRight
+        case KbName('g')
+            if last_press == 0
+                data.params.perRight = max(data.params.perRight - 0.1, 0);
+                fprintf('perRight decremented to %.2f\n', ...
+                    data.params.perRight);
+                
+                % Re-populate data.stimuli.loc
+                maxrepeat = floor(log(0.125)/log(abs(data.params.perRight-0.5)+0.5)); 
+                if maxrepeat<0; maxrepeat = Inf; end;
+                
+                data.stimuli.loc((k+1):end) = ...
+    psychsr_rand(1-data.params.perRight,data.params.numTrials - k,0,maxrepeat);
+                
+                last_press = 1;
+            end
+            
+        % 'm' - increment antibiasRepeat
+        case KbName('m')
+            if last_press == 0
+                data.params.antibiasRepeat = ...
+                    min(data.params.antibiasRepeat + 0.1, 1);
+                fprintf('antibiasRepeat incremented to %.2f\n', ...
+                    data.params.antibiasRepeat);
+                last_press = 1;
+            end
+        
+        % 'n' - decrement antibiasRepeat
+        case KbName('n')
+            if last_press == 0
+                data.params.antibiasRepeat = ...
+                    max(data.params.antibiasRepeat - 0.1, 0);
+                fprintf('antibiasRepeat incremented to %.2f\n', ...
+                    data.params.antibiasRepeat);
+                last_press = 1;
+            end
     end
+    
 else
     last_press = 0;
     hold = 0;

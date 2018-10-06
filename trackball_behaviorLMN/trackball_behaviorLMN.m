@@ -3222,12 +3222,12 @@ case {92}
         data.params.reward = [4];
         data.params.rewardProb = [1];
         data.params.freeChoice = 0;     % percentage of free choices
-        data.params.perRight = 0.7;       % percentage of right trials (out of all non-freechoice)
+        data.params.perRight = 0.3;       % percentage of right trials (out of all non-freechoice)
         
-        data.params.antibiasRepeat = 0.5; % probability that antibias will repeat after a wrong trial
+        data.params.antibiasRepeat = 0; % probability that antibias will repeat after a wrong trial
         data.params.antibiasSwitch = 0; % probability that antibias will switch after a correct trial
         data.params.antibiasNumCorrect = [1 1]; % number of correct responses before forced switch
-        data.params.antibiasConsecutive =  1; % must be consecutive
+        data.params.antibiasConsecutive =  0; % must be consecutive
         
         data.params.responseTime = 2;   % maximum reaction time
         data.params.punishDelay = 0;
