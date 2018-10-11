@@ -1,4 +1,4 @@
-
+goLMN();
 % clear variables
 psychsr_go_root();
 close all; clearvars; clearvars -global data; clc
@@ -3084,7 +3084,7 @@ switch data.mouse
         data.params.simultaneous = 0;
 %         data.params.opp_contrast = [0 0.16 0.32];
 
-        data.params.laser = 1;          % laser on
+        data.params.laser = 0;          % laser on
         data.params.laser_blank_only = 0; 
         data.params.laser_time = 0.01;   % duration in s
         data.params.laser_mode = 'continuous';
@@ -3130,7 +3130,7 @@ switch data.mouse
         data.params.training = 0;
         data.params.trainingSide = [1 1]; % Set to [0 0] if training is on (1)
         
-        data.params.laser = 1;          % laser on
+        data.params.laser = 0;          % laser on
         data.params.laser_blank_only = 0; 
         data.params.laser_time = 0.01;   % duration in s
         data.params.laser_mode = 'continuous';
@@ -3222,7 +3222,7 @@ case {92}
         data.params.reward = [4];
         data.params.rewardProb = [1];
         data.params.freeChoice = 0;     % percentage of free choices
-        data.params.perRight = 0.3;       % percentage of right trials (out of all non-freechoice)
+        data.params.perRight = 0.5;       % percentage of right trials (out of all non-freechoice)
         
         data.params.antibiasRepeat = 0; % probability that antibias will repeat after a wrong trial
         data.params.antibiasSwitch = 0; % probability that antibias will switch after a correct trial

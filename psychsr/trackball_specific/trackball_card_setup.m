@@ -85,13 +85,13 @@ if data.params.lever==0
         delete(instrfind);
     end
      if strcmpi(getenv('computername'),'behave-ball1')
-        data.serial.port = 'COM3';
+        data.serial.port = 'COM9';
      elseif strcmpi(getenv('computername'),'visstim-2p4')
          data.serial.port = 'COM7';
      elseif strcmpi(getenv('computername'),'behavior2')
          data.serial.port = 'COM1';
      else
-         data.serial.port = 'COM3';
+         data.serial.port = 'COM7';
      end
     data.serial.in = serial(data.serial.port);
     data.serial.in.InputBufferSize = 50000;
