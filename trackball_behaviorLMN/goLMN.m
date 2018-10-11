@@ -17,7 +17,12 @@ elseif exist('C:\Dropbox','dir') == 7
 else
     root = 'C:\Users\Surlab\Dropbox\';
 end
-directory = [root, 'nhat'];
+
+if strcmp(getenv('computername'), 'BEHAVE-BALL1')
+    directory = fullfile(root, 'Nhat/trackball-behavior');
+else
+    directory = [root, 'nhat'];
+end
 addpath(genpath(directory));
 cd(directory);
 clearvars directory root
