@@ -15,8 +15,10 @@ screens = Screen('Screens');
 data.screen.pc = getenv('computername');
 
 % Draw to the external screen if avaliable
-if strcmpi(data.screen.pc,'behave-ball2') || strcmpi(data.screen.pc,'behavior2')
+if strcmpi(data.screen.pc,'behave-ball2') || strcmp(data.screen.pc,'BEHAVE-BALL1') %|| strcmpi(data.screen.pc,'behavior2') 
     data.screen.id = 1;
+elseif strcmp(data.screen.pc,'behavior2') 
+    data.screen.id = 2;
 else
 data.screen.id = max(screens);
 end
