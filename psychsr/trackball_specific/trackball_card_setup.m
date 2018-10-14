@@ -7,11 +7,9 @@ data.card.trigger_mode = 'out';
 data.card.inter_trigger_interval = Inf;
 daqreset;
 
-data.screen.pc = 'behave-ball2';
-
 if strcmpi(data.screen.pc,'behave-ball2')
-    data.card.dio_ports = [1,1]; % water, laser % CHANGED TO [1,1] FROM [1,2]
-    data.card.dio_lines = [1 4];
+    data.card.dio_ports = [1,1]; % water, trigger % CHANGED TO [1,1] FROM [1,2]
+    data.card.dio_lines = [1 5];
 elseif strcmpi(data.screen.pc,'behave-ball3')
     data.card.dio_ports = [1,2];
     data.card.dio_lines = [0 4];
@@ -50,10 +48,10 @@ outdata.tstart = NaN*ones(size(data.card.dio_ports));
 data.card.dio.UserData = outdata;
 
 % trigger
-psychsr_set('card','trigger_port',2);
+psychsr_set('card','trigger_port',1);
 psychsr_set('card','trigger_line',5);
-addline(data.card.dio, data.card.trigger_line, data.card.trigger_port, 'out');
-data.card.trigger = data.card.dio.Line(end);
+%addline(data.card.dio, data.card.trigger_line, data.card.trigger_port, 'out');
+data.card.trigger = data.card.dio.Line(2);
 putvalue(data.card.trigger,0);    
 start(data.card.dio);
 
