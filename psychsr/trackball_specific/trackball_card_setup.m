@@ -32,7 +32,8 @@ end
 
 % Add read ports
 if strcmpi(data.screen.pc,'behave-ball2')
-    addline(data.card.dio, 1, 2, 'in'); %port2/line1 for reading
+    addline(data.card.dio, 1, 2, 'in'); %port2/line1 for touch
+    addline(data.card.dio, 0, 2, 'in'); %port2/line0 for release
 end
 
 % line 1 = reward

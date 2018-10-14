@@ -3767,6 +3767,7 @@ data.stimuli.sound = zeros(size(data.stimuli.loc));
 
 % wait for movement
 %     mvmt_test = true; << CHANGE
+fprintf('testing, waiting for touch...\n')
 
 if data.params.lever>0
     start(data.card.ai);
@@ -3867,13 +3868,8 @@ while k < data.params.numTrials && data.quitFlag==0
         output = getvalue(data.card.dio);
     end
     fprintf('Touched. Moving on...\n');
-    tic;
     
-    while output(4) == 0
-        output = getvalue(data.card.dio);
-    end
-    fprintf('Released. Moving on...\n');
-    toc
+    while
     
     if max(data.params.flashStim) > 0 % randomly choose a stimulus duration
         stimtime = data.params.flashStim(randi(numel(data.params.flashStim)));
