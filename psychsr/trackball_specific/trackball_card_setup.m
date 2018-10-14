@@ -7,8 +7,10 @@ data.card.trigger_mode = 'out';
 data.card.inter_trigger_interval = Inf;
 daqreset;
 
+data.screen.pc = 'behave-ball2';
+
 if strcmpi(data.screen.pc,'behave-ball2')
-    data.card.dio_ports = [1,2]; % water, laser
+    data.card.dio_ports = [1,1]; % water, laser % CHANGED TO [1,1] FROM [1,2]
     data.card.dio_lines = [1 4];
 elseif strcmpi(data.screen.pc,'behave-ball3')
     data.card.dio_ports = [1,2];
@@ -28,6 +30,11 @@ data.card.dio = digitalio(data.card.name, data.card.id);
 
 for i = 1:length(data.card.dio_ports)
     addline(data.card.dio, data.card.dio_lines(i), data.card.dio_ports(i), 'out');
+end
+
+% Add read ports
+if strcmpi(data.screen.pc,'behave-ball2')
+    addline(data.card.dio, 1, 2, 'in'); %port2/line1 for reading
 end
 
 % line 1 = reward
