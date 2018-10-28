@@ -1,4 +1,4 @@
-global data
+qglobal data
 
 data.params.reward = [8];
 data.params.rewardProb = [1];
@@ -14,7 +14,7 @@ data.params.responseTime = 2;   % maximum reaction time
 data.params.punishDelay = 0;
 
 data.params.freeBlank = 0;
-data.params.threshold = [15 15]; %in degrees, can have diff thresholds for left/right
+data.params.threshold = [5 5]; %in degrees, can have diff thresholds for left/right
 data.params.training = 0;
 data.params.trainingSide = [1 1]; % Set to [0 0] if training is on (1)
 data.params.reversalFreq = 0;
