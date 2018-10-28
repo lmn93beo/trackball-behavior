@@ -9,7 +9,7 @@ global data
 data.screen.pc = getenv('computername');
 data.params.lever = 0; data.params.laser = 0; data.params.laser_blank_only = 0; data.params.notify = [];
 trackball_card_setup;
-putvalue(data.card.dio,0);
+putvalue(data.card.dio.Line(1:2),0);
 
 %% Set water and deliver
 [~,reward_time,~] = psychsr_set_reward(water_amt);
@@ -27,7 +27,7 @@ end
 %% Clean up
 
 pause(1);
-putvalue(data.card.dio,0);
+putvalue(data.card.dio.Line(1:2),0);
 stop(data.card.dio)
 delete(data.card.dio);
 data.card = rmfield(data.card,'dio');
