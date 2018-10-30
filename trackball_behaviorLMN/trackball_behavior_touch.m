@@ -8,6 +8,8 @@ data.mouse = input('Mouse #: ');
 
 %% default params
 
+data.params.touchReward = 1;
+
 data.params.reward = 4;
 data.params.rewardProb = 1; % probability of reward
 data.params.training = 0; % when 1, only counts movement towards direction specificied by data.params.trainingSide
@@ -401,6 +403,14 @@ while k < data.params.numTrials && data.quitFlag==0
     end
     fprintf('Released. Moving on...\n');
     toc
+    
+    % Reward touches
+    if data.params.touchReward
+        outdata = data.card.dio.UserData;
+        outdata.dt(1) = data.response.reward_time;
+        outdata.tstart(1) = NaN;
+        data.card.dio.UserData = outdata;
+    end
     
     if max(data.params.flashStim) > 0 % randomly choose a stimulus duration
         stimtime = data.params.flashStim(randi(numel(data.params.flashStim)));
@@ -1238,6 +1248,6 @@ fclose(fid);
 
 %% save data
 date = clock;
-folder = sprintf('../behaviorData/mouse%04d',data.mouse);
+folder = sprintf('behaviorData/mouse%04d',data.mouse);
 if ~isdir(folder); mkdir(folder); end
 uisave('data',sprintf('%s/%4d%02d%02d_trackball_%04d',folder,date(1),date(2),date(3),data.mouse));
