@@ -1,6 +1,6 @@
-qglobal data
+global data
 
-data.params.reward = [8];
+data.params.reward = [4];
 data.params.rewardProb = [1];
 data.params.freeChoice = 0;     % percentage of free choices
 data.params.perRight = 0.5;       % percentage of right trials (out of all non-freechoice)

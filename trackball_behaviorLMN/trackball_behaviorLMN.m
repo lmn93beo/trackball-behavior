@@ -127,17 +127,10 @@ data.params.lev_chirp = 0;
 
 
 %% mouse specific parameters
-
-switch data.mouse
-     case 96
-        initParams_96();
-         
-     case 97 
-        initParams_97();
-        
-     case 0 %Used for testing
-        initParams_0();
-end
+% Make the correct file name
+% For e.g. mouse 96 will call initParams_96
+initfile = sprintf('initParams_%d', data.mouse);
+eval(initfile);
 
 %% Setup
 for i = 1:length(data.params.reward)
