@@ -1238,6 +1238,6 @@ fclose(fid);
 
 %% save data
 date = clock;
-folder = sprintf('../behaviorData/trackball/mouse %04d',data.mouse);
+folder = sprintf('../behaviorData/mouse%04d',data.mouse);
 if ~isdir(folder); mkdir(folder); end
 uisave('data',sprintf('%s/%4d%02d%02d_trackball_%04d',folder,date(1),date(2),date(3),data.mouse));
