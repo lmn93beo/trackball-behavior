@@ -391,6 +391,9 @@ while k < data.params.numTrials && data.quitFlag==0
     data.params.trial_threshold(k,:) = data.params.threshold;
     
     %%% Trial initiation...
+    
+    
+    tic;    
     output = getvalue(data.card.dio);
     while output(3) == 0
         output = getvalue(data.card.dio);
@@ -404,10 +407,15 @@ while k < data.params.numTrials && data.quitFlag==0
     fprintf('Released. Moving on...\n');
     toc
     
+    elapsed = toc;
+    
     % Reward touches
     if data.params.touchReward
+%         outdata = data.card.dio.UserData;
+%         outdata.dt(1) = data.response.reward_time;
+%         outdata.tstart(1) = NaN;
         outdata = data.card.dio.UserData;
-        outdata.dt(1) = data.response.reward_time;
+        outdata.dt(1) = data.response.reward_time; % / elapsed / 10;
         outdata.tstart(1) = NaN;
         data.card.dio.UserData = outdata;
     end
@@ -1169,6 +1177,9 @@ while k < data.params.numTrials && data.quitFlag==0
     data.response.actstimdur(k) = diff(flips);
     data.response.delay(k) = godelay;
     data.response.actdelay(k) = actdelay;
+    
+    % Visualize performance
+    visualize_helper;
 end
 
 %% Cleanup

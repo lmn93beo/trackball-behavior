@@ -1146,6 +1146,10 @@ while k < data.params.numTrials && data.quitFlag==0
     data.response.actstimdur(k) = diff(flips);
     data.response.delay(k) = godelay;
     data.response.actdelay(k) = actdelay;
+    
+    % Plot performance
+    figure(1);
+    visualize_helper;
 end
 
 %% Cleanup
