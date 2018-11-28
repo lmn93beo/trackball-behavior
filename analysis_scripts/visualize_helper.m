@@ -2,17 +2,18 @@ clf;
 choice = data.response.choice;
 ntrials = numel(choice);
 stim = data.stimuli.loc(1:ntrials);
+trialstart = data.response.trialstart;
 
 % First plot the time-outs
 timeouts = find(choice == 5);
-plot(timeouts, stim(timeouts), 'ko', 'MarkerFaceColor', 'k');
+plot(trialstart(timeouts), stim(timeouts), 'ko', 'MarkerFaceColor', 'k');
 hold on
         
 % Plot the correct trials
 corr = find(choice ~= 5 & stim == choice);
 incorr = find(choice ~= 5 & stim ~= choice);
-plot(corr, stim(corr), 'bo', 'MarkerFaceColor', 'b');
-plot(incorr, stim(incorr), 'ro', 'MarkerFaceColor', 'r');
+plot(trialstart(corr), stim(corr), 'bo', 'MarkerFaceColor', 'b');
+plot(trialstart(incorr), stim(incorr), 'ro', 'MarkerFaceColor', 'r');
 
 % Visualize the behavior
 xlabel('Trial #');
