@@ -1,8 +1,19 @@
 global data
 
-maxrepeat = floor(log(0.125)/log(abs(data.params.perRight-0.5)+0.5)); if maxrepeat<0; maxrepeat = Inf; end;
-data.stimuli.loc = psychsr_rand(1-data.params.perRight,data.params.numTrials,0,maxrepeat);
-data.stimuli.loc(1:data.params.nRight) = 2;
+% Determine stimulus locations
+if data.params.alternating
+    % For alternating condition
+    data.stimuli.loc = ones(1, data.params.numTrials);
+    data.stimuli.loc(1:2:end) = 2;
+else
+    maxrepeat = floor(log(0.125)/log(abs(data.params.perRight-0.5)+0.5)); if maxrepeat<0; maxrepeat = Inf; end;
+    data.stimuli.loc = psychsr_rand(1-data.params.perRight,data.params.numTrials,0,maxrepeat);
+    data.stimuli.loc(1:data.params.nRight) = 2;
+end
+
+% For a block structure
+data.stimuli.loc = repelem(data.stimuli.loc, data.params.blockSize);
+
 if data.params.omitEarlyTone > 0 % -- RH
     data.response.playEarlyCue = psychsr_rand(1-data.params.omitEarlyTone,data.params.numTrials,0,maxrepeat);
 elseif data.params.omitEarlyTone == 1
