@@ -10,7 +10,7 @@ data.params.antibiasSwitch = 0; % probability that antibias will switch after a 
 data.params.antibiasNumCorrect = [1 1]; % number of correct responses before forced switch
 data.params.antibiasConsecutive =  0; % must be consecutive
 
-data.params.responseTime = 2;   % maximum reaction time
+data.params.responseTime = 10;   % maximum reaction time
 data.params.punishDelay = 0;
 
 data.params.freeBlank = 0;
@@ -20,7 +20,7 @@ data.params.trainingSide = [1 1]; % Set to [0 0] if training is on (1)
 data.params.reversalFreq = 0;
 
 data.params.proOrienting = 0;
-data.params.flashStim = 0.4;
+data.params.flashStim = 2.0;
 data.params.earlyCue_sound = 30;      
 data.params.early_cue = 1;      % sound --> delay --> mvmt (OVERRIDES go_cue)
 data.params.minGoDelay = 0;
@@ -31,9 +31,9 @@ data.params.earlyAbort = 0;
 
 data.params.goDelay = 1;
 
-data.params.simultaneous = 1;
-data.params.contrast = 0.64;
-data.params.opp_contrast = [0 0.16 0.32 0.48];
+data.params.simultaneous = 0;
+data.params.contrast = 1;
+data.params.opp_contrast = 1;
 
     % Laser
 
