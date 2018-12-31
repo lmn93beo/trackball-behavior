@@ -33,7 +33,7 @@ ucon = unique(con);
 
 
 blankFlag = sum(ucon==0)>0;
-conFlag = length(ucon(ucon>0))>1;
+conFlag = 0; %length(ucon(ucon>0))>1;
 blockFlag = length(unique(block))>1 & data.params.actionValue & data.params.freeForcedBlocks;
 laserFlag = length(unique(laser))>1 & data.params.laser;
 
