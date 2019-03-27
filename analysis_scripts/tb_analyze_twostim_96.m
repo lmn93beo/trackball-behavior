@@ -1,6 +1,6 @@
 %% Find all behavior files with varying contrasts
 clear all
-parent_folder = 'C:\Users\Sur lab\Dropbox (MIT)\trackball-behavior\Data\96\102318_to_102518_analysis_reward0-4';
+parent_folder = 'C:\Users\Sur lab\Dropbox (MIT)\trackball-behavior\Data\96\Dec2018';
 saveFileName = 'Mouse096_behavior.mat';
 load_all = 1; %Load all files, regarless of laser
 load_laser = 0; %load only files with laser

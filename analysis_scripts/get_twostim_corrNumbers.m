@@ -25,14 +25,14 @@ else
 end
 
 for i = 1:numel(curr_con)
-    perf_l(i) = sum(loc == 2 & choice == 2 & cons == curr_con(i) & laser == laser_idx)/...
-        (sum(loc == 2 & cons == curr_con(i) & laser == laser_idx) - sum(loc == 2 & cons == curr_con(i) & choice == 5 & laser == laser_idx));
+    corr_l(i) = sum(loc == 2 & choice == 2 & cons == curr_con(i));
+    incorr_l(i) = sum(loc == 2 & choice == 1 & cons == curr_con(i));
     
-    perf_r(i) = sum(loc == 1 & choice == 1 & cons == curr_con(i) & laser == laser_idx)/...
-        (sum(loc == 1 & cons == curr_con(i) & laser == laser_idx) - sum(loc == 1 & cons == curr_con(i) & choice == 5 & laser == laser_idx));
+    corr_r(i) = sum(loc == 1 & choice == 1 & cons == curr_con(i));
+    incorr_r(i) = sum(loc == 1 & choice == 2 & cons == curr_con(i));
 end
 
-output = [curr_con perf_l' perf_r'];
+output = [curr_con corr_l' incorr_l' corr_r' incorr_r'];
 
 end
 
