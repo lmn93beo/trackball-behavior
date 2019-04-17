@@ -1,0 +1,30 @@
+### ANALYSIS OF MOUSE 96, 1/15/19 ###
+- Number of trials: 296, sequence of 4
+- First 240 trials: third choice is extinguishing with 0.1 * (0.98)^n
+
+- Mean reaction times for elements in the sequence, up to trial 240
+	- First: 0.2486
+	- Second: 0.9041
+	- Third: 0.7020
+	- Fourth: 1.0421
+	
+- If only look at trial 241 and above:
+	- First: 0.1752
+	- Second: 0.8874
+	- Third: 0.7893
+	- Fourth: 0.7267
+	
+	
+*************************************************************
+Performance measures:
+- Mean performance for elements in the sequence, up to trial 240:
+	- First: 0.9833
+	- Second: 0.8500
+	- Third: 0.5833
+	- Fourth: 0.9500
+	
+- Mean performance for elements in the sequence, trial 241 and above:
+	- First: 0.9833
+	- Second: 0.9286
+	- Third: 0.6429
+	- Fourth: 0.9286
