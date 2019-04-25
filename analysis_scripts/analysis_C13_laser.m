@@ -1,6 +1,6 @@
 %% Find all behavior files with varying contrasts
 clear all
-parent_folder = 'C:\Users\Sur lab\Dropbox (MIT)\trackball-behavior\Data\C13\laser_analys_FebMar2019_left';
+parent_folder = 'C:\Users\Sur lab\Dropbox (MIT)\trackball-behavior\Data\C13\laser_analys_FebMar2019_right';
 saveFileName = 'Mouse013_behavior.mat';
 load_all = 1; %Load all files, regarless of laser
 load_laser = 1; %load only files with laser
@@ -110,10 +110,10 @@ for i = 1:numel(all_animals)
         Curr_perf_laser{ii} = curr_perf_laser(sort_idx);
         
         %figure(ii)
-        subplot(2,2,ii);
-        l1 = plot(curr_luminance_laser, curr_perf_laser, 'r');
+        subplot(3,2,ii);
+        l1 = plot(curr_luminance_laser, Curr_perf_laser{ii}, 'r');
         hold on;
-        l2 = plot(curr_luminance_NL, curr_perf_NL, 'b');
+        l2 = plot(curr_luminance_NL, Curr_perf_NL{ii}, 'b');
         
         xlabel('Left - right stimulus luminance');
         ylabel('% left selected');
