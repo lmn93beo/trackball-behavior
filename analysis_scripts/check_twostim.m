@@ -5,7 +5,7 @@ all_cons = unique(data.params.opp_contrast);
 con_check = sum(all_cons > 0) > 1;  
 
 % ... antibias off
-anti_check = data.params.antibiasConsecutive == 1; %<<<<CHANGE BACK TO 0
+anti_check = data.params.antibiasConsecutive == 0; %<<<<CHANGE BACK TO 0
 
 % ... multiple stim durations
 try
