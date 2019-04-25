@@ -66,26 +66,21 @@ for i = 1:numel(all_animals)
         filename = strsplit(C{end}, '_');
 
         % Get number correct in incorrect 
-        con_perf_NL{i}{ii} = get_twostim_perf(data, 0);
-        con_perf_laser{i}{ii} = get_twostim_perf(data, 1);
+        con_perf_NL = get_twostim_perf(data, 0);
+        con_perf_laser = get_twostim_perf(data, 1);
         
         target_con = 0.64;
-        curr_luminance_NL = [con_perf_NL{i}{ii}(:,1)'-target_con target_con-con_perf_NL{i}{ii}(:,1)'];
-        [curr_luminance_NL sort_idx] = sort(curr_luminance_NL);
-        curr_perf_NL = [1-con_perf_NL{i}{ii}(:,3)' con_perf_NL{i}{ii}(:,2)'];
-        Curr_perf_NL{ii} = curr_perf_NL(sort_idx);
+        [luminanceNL, perfNL, ntrialsNL, nleftNL] = get_perf_from_arr(con_perf_NL, target_con);
+        [luminanceL, perfL, ntrialsL, nleftL] = get_perf_from_arr(con_perf_laser, target_con);
         
-        curr_luminance_laser = [con_perf_laser{i}{ii}(:,1)'-target_con target_con-con_perf_laser{i}{ii}(:,1)'];
-        [curr_luminance_laser sort_idx] = sort(curr_luminance_laser);
-        curr_perf_laser = [1-con_perf_laser{i}{ii}(:,3)' con_perf_laser{i}{ii}(:,2)'];
-        Curr_perf_laser{ii} = curr_perf_laser(sort_idx);
-        
-        %figure(ii)
+        Curr_perf_NL{ii} = perfNL;
+        Curr_perf_laser{ii} = perfL;
+         
         
         subplot(nrows, ncols, ii);
-        l1 = plot(curr_luminance_laser, Curr_perf_laser{ii}, 'r');
+        l1 = plot(luminanceL, perfL, 'r');
         hold on;
-        l2 = plot(curr_luminance_NL, Curr_perf_NL{ii}, 'b');
+        l2 = plot(luminanceNL, perfNL, 'b');
         
         xlabel('Left - right stimulus luminance');
         ylabel('% left selected');
