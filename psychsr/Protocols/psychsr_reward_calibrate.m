@@ -26,6 +26,7 @@ psychsr_go_root();
     
     repeat = 1;
     w = [];
+    nopen = 50;
     
     %% test airpuff    
 %     airpuff = input('Test airpuff? (0/[1]): ');    
@@ -87,8 +88,8 @@ psychsr_go_root();
                 else
                     data.response.punish_time = dt(j)/1000;
                 end
-                    
-                for i = 1:50
+                input('Press when ready: ');    
+                for i = 1:nopen
                     if isempty(quinine) || ~quinine
                         psychsr_reward(loop,0);
                     else
@@ -117,7 +118,7 @@ psychsr_go_root();
     dt = repmat(dt,1,length(w)/length(dt));
     
     %% calculate and save
-    dw = w/50*1000;    
+    dw = w / nopen * 1000;    
     b = polyfit(dw,dt,1);
     close all
     figure

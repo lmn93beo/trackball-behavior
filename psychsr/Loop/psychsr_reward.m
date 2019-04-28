@@ -1,4 +1,6 @@
 function psychsr_reward(loop,sound,amt,side)
+% Give a reward, with the amount given by data.response.reward_time(idx)
+% (reward time given in s)
 
 global data;
 
@@ -25,9 +27,10 @@ psychsr_sound(sound);
 % administer reward
 if data.response.mode == 4 && strcmp(data.card.ao.Running,'Off') && (data.card.ao.SamplesOutput==0)
     if strcmp(data.response.reward_type,'water')
-        putsample(data.card.ao,[5,0]); tstart = tic;
+        putsample(data.card.ao,[5,0]); tic;
         WaitSecs(data.response.reward_time(idx));
-        putsample(data.card.ao,[0,0]);
+        putsample(data.card.ao,[0,0]); tend = toc;
+        disp(tend);
     else
         start(data.card.ao);
     end
