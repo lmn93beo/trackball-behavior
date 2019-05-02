@@ -17,15 +17,20 @@ end
 
 switch mouse
     case 91
-        parent_folder = sprintf('%s%s', root, '\Data\80_91\91_RACC');
+        parent_folder = sprintf('%s%s', root, '\Data\80_91_ACC\91_RACC');
     case 80
-        parent_folder = sprintf('%s%s', root, '\Data\80_91\80_LACC');
+        parent_folder = sprintf('%s%s', root, '\Data\80_91_ACC\80_LACC');
     case '13L'
         parent_folder = sprintf('%s%s', root, '\Data\C13\laser_analys_FebMar2019_left');
     case '13R'
         parent_folder = sprintf('%s%s', root, '\Data\C13\laser_analys_FebMar2019_right');
     case '13Apr'
         parent_folder = sprintf('%s%s', root, '\Data\C13\Apr2019');
+    case 87
+        parent_folder = sprintf('%s%s', root, '\Data\87_89_SC\87_RSC');
+    case 89
+        parent_folder = sprintf('%s%s', root, '\Data\87_89_SC\89_LSC');
+    
     otherwise
         error('Invalid mouse number');
 end
@@ -77,7 +82,7 @@ end
 
 
 k = 0; all_cons = []; all_perf = [];
-figure(2);
+figure;
 
 %   Average by animals
 all_cons = []; all_perf = [];
@@ -136,7 +141,7 @@ for i = 1:numel(all_animals)
         date = splits{end}(1:8);
         
         
-        title(['Date: ' date]);
+        title(sprintf('Date: %s, power: %s', date, data.params.laser_power));
         
         if ii == 6
             legend([l1, l2], {'Laser', 'No laser'})
@@ -171,6 +176,8 @@ figure;
 l1 = plot(luminanceL, perfL_total, 'o', 'Color', colors(1,:));
 hold on
 l2 = plot(luminanceNL, perfNL_total, 'o', 'Color', colors(2,:));
+legend([l1, l2], {'Laser', 'No laser'});
+
 
 %% Save the parameters
 filename = input('Enter the name of the file, 0 to skip saving: ');

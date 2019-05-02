@@ -25,6 +25,14 @@ switch mouse
         directory = sprintf('%s%s', root, '\Data\80_91\80_LACC\');
         load([directory '80_LACC_agg_perf.mat']);
         description = '80 Left ACC';
+    case 89
+        directory = sprintf('%s%s', root, '\Data\87_89_SC\89_LSC\');
+        load([directory '89_LSC_agg_perf.mat']);
+        description = '89 Left SC';
+    case 87
+        directory = sprintf('%s%s', root, '\Data\87_89_SC\87_RSC\');
+        load([directory '87_RSC_agg_perf.mat']);
+        description = '87 Right SC';
     case '13L'
         directory = sprintf('%s%s', root, '\Data\C13\laser_analys_FebMar2019_left\');
         load([directory 'C13_leftSTR_agg_perf.mat']);
@@ -124,8 +132,8 @@ StimLevels = [luminanceNL; luminanceL];
 NumPos = [nleftNL_total'; nleftL_total'];
 OutOfNum = [ntrialsNL_total'; ntrialsL_total'];
 
-paramsGuess = [0 5 0.3 0;
-               0 5 0.1 0];
+paramsGuess = [0 2 0 0;
+               -0.8 2 0 0];
 
 [paramsFitted, LL, exitflag, ~, ~, numParamsFuller] = PAL_PFML_FitMultiple(StimLevels, NumPos, OutOfNum, ...
   paramsGuess, PF,'searchOptions',options,'lapserates',lapseratesfuller,'thresholds',thresholdsfuller,...
