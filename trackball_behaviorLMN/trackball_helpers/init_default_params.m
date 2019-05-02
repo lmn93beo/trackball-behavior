@@ -95,7 +95,7 @@ data.params.noLaser = 20;       % number of no laser trials
 data.params.laser_blank = 0;    % stimulate on 0 contrast trials?
 data.params.earlyCue_sound = 17;
 
-mvmt_test = true;
+
 
 
 % lever program

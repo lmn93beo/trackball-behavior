@@ -1,6 +1,7 @@
 global data
 % wait for movement
 %     mvmt_test = true; << CHANGE
+mvmt_test = true;
 fprintf('testing, waiting for mvmt...\n')
 
 if data.params.lever>0

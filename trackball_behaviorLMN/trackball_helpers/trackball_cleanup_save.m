@@ -76,6 +76,11 @@ fclose(fid);
 
 %% save data
 date = clock;
-folder = sprintf('behaviorData/mouse%04d',data.mouse);
+if ischar(data.mouse)
+    folder = sprintf('behaviorData/mouse%s',data.mouse);
+else
+    folder = sprintf('behaviorData/mouse%s',num2str(data.mouse));
+end
+%folder = sprintf('behaviorData/mouse%04d',data.mouse);
 if ~isdir(folder); mkdir(folder); end
-uisave('data',sprintf('%s/%4d%02d%02d_trackball_%04d',folder,date(1),date(2),date(3),data.mouse));
+uisave('data',sprintf('%s/%4d%02d%02d_trackball_%s.mat',folder,date(1),date(2),date(3),data.mouse));
