@@ -14,7 +14,11 @@ if lastblock ~= data.stimuli.block(k)
     lastblock = data.stimuli.block(k);        
 end        
 str = trackball_dispperf(0);
-fprintf('%s',str);       
+fprintf('%s',str);
+
+if k > 1
+    fprintf('TOTAL REWARD: %d um\n', sum(data.response.reward(1:k - 1)));
+end
 
 if data.params.blockRewards && length(data.params.reward) > 1
     fprintf('BLOCK %d: %d rewards of %d\n',data.stimuli.block(k),nrewards,rewardSwitch)
