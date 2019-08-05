@@ -11,7 +11,7 @@ data.params.contrast = contrast;
 data.params.contrast_follows_loc = 0;
 
 
-data.mouse = 96;
+%data.mouse = 96;
 data.params.training = 0;
 data.params.trainingSide = [1 1];
 data.params.blockSize = 1;

@@ -3,7 +3,7 @@ load default_params_training.mat
 
 data.params.reward = 6;
 data.params.contrast = 0.64;
-data.mouse = 13;
+data.mouse = '13';
 data.params.training = 0;
 data.params.trainingSide = [1 1];
 data.params.blockSize = 1;
@@ -17,7 +17,7 @@ data.params.flashStim = 0.4;
 % Antibias
 data.params.antibiasConsecutive = 1;
 data.params.perRight = 0.5;
-data.params.antibiasRepeat = 0.8; % probability that antibias will repeat after a wrong trial        
+data.params.antibiasRepeat = 0; % probability that antibias will repeat after a wrong trial        
 data.params.antibiasSwitch = 0; % probability that antibias will switch after a correct trial
 
 data.params.responseTime = 1;

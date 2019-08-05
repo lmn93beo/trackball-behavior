@@ -36,25 +36,30 @@ elseif choice == 6 % abort sound
 elseif choice == data.stimuli.loc(k) || data.stimuli.loc(k)==3 % correct choice
     if length(data.response.reward_time)==1
         id = 1;
-    elseif data.params.actionValue % left/right
-        if data.stimuli.block(k) == 3 % equal value
-            [~,id] = max(data.params.reward);
-        else
-            id = xor(choice-1,data.stimuli.block(k)-1)+1;
-        end
-    elseif data.params.linkStimAction % diamond/square with fixed values
-        if data.stimuli.loc(k) == 3
-            id = ~xor(choice-1,data.stimuli.id(k)-1)+1;
-        else
-            id = data.stimuli.id(k);
-        end
-    else % diamond/square with values changing as function of block
-        if data.stimuli.loc(k) == 3            
-            id = xor(~xor(choice-1,data.stimuli.id(k)-1),data.stimuli.block(k)-1)+1;
-        else
-            id = xor(data.stimuli.id(k)-1,data.stimuli.block(k)-1)+1;
-        end
+    else
+        id = choice;
     end
+        
+        
+%     elseif data.params.actionValue % left/right
+%         if data.stimuli.block(k) == 3 % equal value
+%             [~,id] = max(data.params.reward);
+%         else
+%             id = xor(choice-1,data.stimuli.block(k)-1)+1;
+%         end
+%     elseif data.params.linkStimAction % diamond/square with fixed values
+%         if data.stimuli.loc(k) == 3
+%             id = ~xor(choice-1,data.stimuli.id(k)-1)+1;
+%         else
+%             id = data.stimuli.id(k);
+%         end
+%     else % diamond/square with values changing as function of block
+%         if data.stimuli.loc(k) == 3            
+%             id = xor(~xor(choice-1,data.stimuli.id(k)-1),data.stimuli.block(k)-1)+1;
+%         else
+%             id = xor(data.stimuli.id(k)-1,data.stimuli.block(k)-1)+1;
+%         end
+%     end
 
     if rand < data.params.rewardProb(id) && ~(data.params.lever == 1 && data.stimuli.loc(k) == 1)
         % play reward sound

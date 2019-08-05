@@ -8,7 +8,7 @@ contrast = 1;
 data.params.contrast = contrast;
 
 
-data.mouse = 97;
+%data.mouse = 97;
 data.params.training = 0;
 data.params.trainingSide = [1 1];
 data.params.blockSize = 1;

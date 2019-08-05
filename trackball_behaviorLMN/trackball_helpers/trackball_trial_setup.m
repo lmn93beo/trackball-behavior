@@ -64,11 +64,12 @@ lastblock = 0;
 nblocks = 0;
 nrewards = 0;
 nrewards_ab = 0;
-if data.params.firstBlockEqual || data.stimuli.block(1) == 3
-    rewardSwitch = max(data.params.blockSize);
-else
-    rewardSwitch = min(data.params.blockSize);
-end
+rewardSwitch = 10000;
+% if data.params.firstBlockEqual || data.stimuli.block(1) == 3
+%     rewardSwitch = max(data.params.blockSize);
+% else
+%     rewardSwitch = min(data.params.blockSize);
+% end
 
 % link stimulus id to action in blocks
 if data.params.actionValue == 0 && data.params.linkStimAction
@@ -88,9 +89,27 @@ if data.params.laser_blank_only
     data.stimuli.contrast = ones(1,data.params.numTrials);
     data.stimuli.contrast(temp_conc) = 0;             
 else
-    data.stimuli.contrast = data.params.contrast(randi(length(data.params.contrast),1,data.params.numTrials));
-    data.stimuli.contrast(data.stimuli.loc==3) = max(data.params.contrast);
-    data.stimuli.contrast(1:data.params.nHighContrast) = max(data.params.contrast);
+    if data.params.alternating
+        % Alternating condition for contrast
+        n = numel(data.params.contrast);
+        data.stimuli.contrast = ones(1, data.params.numTrials);
+        for i = 1:n
+            data.stimuli.contrast(i:n:end) = data.params.contrast(i);
+        end
+    else
+        % Random contrast from the array
+        data.stimuli.contrast = data.params.contrast(randi(length(data.params.contrast),1,data.params.numTrials));
+        data.stimuli.contrast(data.stimuli.loc==3) = max(data.params.contrast);
+        data.stimuli.contrast(1:data.params.nHighContrast) = max(data.params.contrast);
+    end
+end
+
+% Block structure for contrast
+data.stimuli.contrast = repelem(data.stimuli.contrast, data.params.blockSize);
+
+
+if data.params.contrast_follows_loc
+    data.stimuli.contrast = data.stimuli.loc - 1;
 end
 
 if data.params.laser && data.params.laser_blank == 0

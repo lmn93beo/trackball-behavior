@@ -5,13 +5,16 @@ close all; clearvars; clearvars -global data; clc
 global data
 
 data.mouse = input('Mouse #: ');
+if ~ischar(data.mouse)
+    data.mouse = num2str(data.mouse);
+end
 
 %% Setup parameters
 init_default_params; %default
 
 % Mouse specific parameters
 % Make the correct file name. For e.g. mouse 96 will call initParams_96
-initfile = sprintf('initParams_%d', data.mouse);
+initfile = sprintf('initParams_%s', data.mouse);
 eval(initfile);
 
 %% Setup
@@ -23,6 +26,8 @@ trackball_mvmt_test;
 
 k = 0;
 tstart = tic;
+
+
 
 
 while k < data.params.numTrials && data.quitFlag==0
