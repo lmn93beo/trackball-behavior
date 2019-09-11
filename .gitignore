@@ -1,7 +1,14 @@
 *.html
+*.pkl
+*.asv
 *.jpeg
 *.mat
+*.tif
 *.wav
 *.fig
 *.png
 Data/
+helpers/
+psychsr/
+*.xml
+*.iml

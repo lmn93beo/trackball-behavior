@@ -5,7 +5,6 @@
 %% Load the data
 clear all;
 mouse = input('Enter mouse number: ');
-combined = 0;
 xtext = 'Left - right stimulus luminance';
 ytext = '% left selected';
 
@@ -41,8 +40,44 @@ switch mouse
         directory = sprintf('%s%s', root, '\Data\C13\laser_analys_FebMar2019_right\');
         load([directory 'C13_rightSTR_agg_perf.mat']);
         description = 'C13 Right STR';
+    case '13L_first3'
+        directory = sprintf('%s%s', root, '\Data\C13\C13_leftACCSTR\');
+        load([directory 'C13_leftACCSTR_combined.mat']);
+        description = 'C13 Left STR';
+    case '13R_first3'
+        directory = sprintf('%s%s', root, '\Data\C13\C13_rightACCSTR\');
+        load([directory 'C13_rightACCSTR_combined.mat']);
+        description = 'C13 Right STR';
+    case '13_combined'
+        directory13 = sprintf('%s%s', root, '\Data\C13\');
+        load([directory13 'C13_leftACCSTR\C13_leftACCSTR_combined.mat']);
+        nleftNL_LSTR = nleftNL_total;
+        nleftL_LSTR = nleftL_total;
+        ntrialsNL_LSTR = ntrialsNL_total;
+        ntrialsL_LSTR = ntrialsL_total;
+        
+        load([directory13 'C13_rightACCSTR\C13_rightACCSTR_combined.mat']);
+        nleftNL_RSTR = nleftNL_total;
+        nleftL_RSTR = nleftL_total;
+        ntrialsNL_RSTR = ntrialsNL_total;
+        ntrialsL_RSTR = ntrialsL_total;
+        
+        % Combine the two sides
+        nleftNL_LSTR = flipud(ntrialsNL_LSTR - nleftNL_LSTR);
+        nleftL_LSTR = flipud(ntrialsL_LSTR - nleftL_LSTR);
+        ntrialsNL_LSTR = flipud(ntrialsNL_LSTR);
+        ntrialsL_LSTR = flipud(ntrialsL_LSTR);
+        
+        nleftNL_total = nleftNL_LSTR + nleftNL_RSTR;
+        nleftL_total = nleftL_LSTR + nleftL_RSTR;
+        ntrialsNL_total = ntrialsNL_LSTR + ntrialsNL_RSTR;
+        ntrialsL_total = ntrialsL_LSTR + ntrialsL_RSTR;
+        
+        description = 'RSTR + LSTR combined';
+        xtext = 'Contra - Ipsi luminance';
+        ytext = '%contra selected';
+        
     case '91_80_combined'
-        combined = 1;
         directory91 = sprintf('%s%s', root, '\Data\80_91\91_RACC\');
         load([directory91 '91_RACC_agg_perf.mat']);
         
@@ -94,9 +129,7 @@ plot(luminanceNL, perfNL_total, 'o', 'Color', colors(2,:));
 searchGrid.alpha = -1:.05:1;    %structure defining grid to
 searchGrid.beta = 10.^(-1:.05:2); %search for initial values
 
-
-
-fitlapse = 1;
+fitlapse = 0;
 if fitlapse
     % With lapse fit
     searchGrid.gamma = 0:.005:.1;

@@ -16,6 +16,10 @@ end
 
 
 switch mouse
+    case '001'
+        parent_folder = sprintf('%s%s', root, '\Data\001');
+    case '003'
+        parent_folder = sprintf('%s%s', root, '\Data\003');
     case 91
         parent_folder = sprintf('%s%s', root, '\Data\80_91_ACC\91_RACC');
     case 80
@@ -26,10 +30,26 @@ switch mouse
         parent_folder = sprintf('%s%s', root, '\Data\C13\laser_analys_FebMar2019_right');
     case '13Apr'
         parent_folder = sprintf('%s%s', root, '\Data\C13\Apr2019');
+    case '13Jun'
+        parent_folder = sprintf('%s%s', root, '\Data\C13\Jun2019');
     case 87
         parent_folder = sprintf('%s%s', root, '\Data\87_89_SC\87_RSC');
     case 89
         parent_folder = sprintf('%s%s', root, '\Data\87_89_SC\89_LSC');
+    case '13L_first3'
+        parent_folder = sprintf('%s%s', root, '\Data\C13\C13_leftACCSTR');
+    case '13R_first3'
+        parent_folder = sprintf('%s%s', root, '\Data\C13\C13_rightACCSTR');
+    case 111
+        parent_folder = sprintf('%s%s', root, '\Data\Bilateral ACC Inactivation ALL\111');
+    case 113
+        parent_folder = sprintf('%s%s', root, '\Data\Bilateral ACC Inactivation ALL\113');
+    case 200001
+        parent_folder = sprintf('%s%s', root, '\Data\Bilateral ACC Inactivation ALL\200001');
+    case 200003
+        parent_folder = sprintf('%s%s', root, '\Data\Bilateral ACC Inactivation ALL\200003');
+    case 146
+        parent_folder = sprintf('%s%s', root, '\Data\146_all');
     
     otherwise
         error('Invalid mouse number');
@@ -64,6 +84,9 @@ for i = 1:size(twostim_files,2)
 
     if output
         fprintf('Adding file %s...\n', twostim_files{i});
+        if ischar(data.mouse)
+            data.mouse = str2double(data.mouse);
+        end
         animals(end+1) = data.mouse;
         k = k + 1;
         sessions{k} = twostim_files{i};
@@ -140,8 +163,11 @@ for i = 1:numel(all_animals)
         splits = strsplit(filename, '\');
         date = splits{end}(1:8);
         
-        
-        title(sprintf('Date: %s, power: %s', date, data.params.laser_power));
+        if isfield(data.params, 'laser_power')
+            title(sprintf('Date: %s, power: %s', date, data.params.laser_power));
+        else
+            title(sprintf('Date: %s', date));
+        end
         
         if ii == 6
             legend([l1, l2], {'Laser', 'No laser'})
@@ -173,8 +199,8 @@ perfL_total = nleftL_total ./ ntrialsL_total;
 
 % Plot the aggregate performance
 figure;
-l1 = plot(luminanceL, perfL_total, 'o', 'Color', colors(1,:));
 hold on
+l1 = plot(luminanceL, perfL_total, 'o', 'Color', colors(1,:));
 l2 = plot(luminanceNL, perfNL_total, 'o', 'Color', colors(2,:));
 legend([l1, l2], {'Laser', 'No laser'});
 
@@ -184,6 +210,8 @@ filename = input('Enter the name of the file, 0 to skip saving: ');
 if ischar(filename)
     save(filename, 'luminanceL', 'luminanceNL', ...
         'nleftNL_total', 'nleftL_total',...
-        'ntrialsNL_total', 'ntrialsL_total');
+        'ntrialsNL_total', 'ntrialsL_total',...
+        'Curr_perf_NL', 'Curr_perf_NL',...
+        'Curr_perf_laser', 'Curr_perf_laser');
 end
 

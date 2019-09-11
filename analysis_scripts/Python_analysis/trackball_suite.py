@@ -1,15 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io as sp
-import seaborn as sns
 from sklearn.linear_model import LogisticRegression
+import utils
+import copy
 from sklearn.datasets import load_iris
-import glob
-import statsmodels.api as sm
 
 def get_choice_stim(path):
-    '''Given the path to the .mat behavior file,
-    return the choice array and the stimulus type array'''
+    """Given the path to the .mat behavior file,
+    return the choice array and the stimulus type array"""
     data = sp.loadmat(path)
     choice = data['data']['response'][0,0]['choice'][0,0][0]
     ntrials = len(choice)
@@ -23,10 +22,10 @@ def get_struct_field(data, field, subfield=None):
     else:
         return data['data'][field][0,0][subfield][0,0][0]
 def get_performance(data):
-    '''Given the data structure, return the performance in the form:
+    """Given the data structure, return the performance in the form:
     An N x 3 array where the columns correspond to
     contrast, performance left, performance right,
-    and each column is one contrast'''
+    and each column is one contrast"""
     # Load necessary arrays
     choice = data['data']['response'][0,0]['choice'][0,0][0]
     ntrials = len(choice)
@@ -54,15 +53,15 @@ def get_performance(data):
         output[i,2] = perf_r
     return output
 
-def plot_psychometric(data):
-    '''Given the data structure, plot the psychometric curve'''
+def plot_psychometric(data, color='b', alpha=0.5):
+    """Given the data structure, plot the psychometric curve"""
     performance = get_performance(data)
     contrast = get_struct_field(data, 'params', 'contrast')
     condiff = performance[:,0] - contrast
     xaxis = np.hstack([condiff, -np.flip(condiff, axis=0)])
     yaxis = np.hstack([1 - performance[:,2], np.flip(performance[:,1], axis=0)])
     #print(xaxis)
-    plt.plot(xaxis, yaxis, 'b', alpha=0.1)
+    plt.plot(xaxis, yaxis, color, alpha=alpha)
     plt.xlabel('Contrast difference')
     plt.ylabel('% Left')
     plt.ylim([0, 1])
@@ -73,38 +72,74 @@ def get_struct_field(data, field, subfield=None):
     else:
         return data['data'][field][0,0][subfield][0,0][0]
 
+
+
 class Session(object):
-    '''A class for a single experiment session'''
-    def __init__(self, filename):
-        self.data = sp.loadmat(filename)
-        self.mouse = get_struct_field(self.data, 'mouse')[0,0]
-        self.choice = get_struct_field(self.data, 'response', 'choice').astype('int')
-        self.ntrials = len(self.choice)
-        self.stim = get_struct_field(self.data, 'stimuli', 'loc')[:self.ntrials].astype('int')
-        self.cons = get_struct_field(self.data, 'stimuli', 'opp_contrast')[:self.ntrials]
-        self.laser = get_struct_field(self.data, 'stimuli', 'laser')[:self.ntrials]
+    """A class for a general collection of trials, note that trial order might not be respected"""
+    def __init__(self, filename=None, trial_list=None):
+        if filename is not None:
+            self.filename = filename
+            self.data = sp.loadmat(filename)
+            self.mouse = get_struct_field(self.data, 'mouse')[0, 0]
+            try:
+                self.choice = get_struct_field(self.data, 'response', 'choice').astype('int')
+            except ValueError:
+                print('Warning: no choice field')
+                self.choice = None
+                raise utils.NoChoiceError('No choice field')
+
+
+            if trial_list is None:
+                trial_list = np.arange(len(self.choice))
+                self.ordered = 1  # whether trial order is respected
+            else:
+                self.ordered = 0
+            self.choice = self.choice[trial_list]
+            self.ntrials = len(self.choice)
+            self.stim = get_struct_field(self.data, 'stimuli', 'loc')[trial_list].astype('int')
+            self.simultaneous = self.data['data']['params'][0,0]['simultaneous'][0,0][0,0]
+            self.contrast = get_struct_field(self.data, 'params', 'contrast')
+
+            if self.simultaneous:
+                self.cons = get_struct_field(self.data, 'stimuli', 'opp_contrast')[trial_list]
+            else:
+                print('Warning: no opp contrast')
+                self.cons = None
+                self.contrast = None
+                raise utils.NoConsError
+
+            try:
+                self.laser = get_struct_field(self.data, 'stimuli', 'laser')[trial_list] - 1
+            except ValueError:
+                self.laser = None
+                print('Warning: no laser')
+                #raise utils.NoLaserError('No laser for this session')
+
+    def copy(self):
+        """Copy to a new object. Return the copied object"""
+        return copy.deepcopy(self)
 
     def get_choice(self):
-        '''Returns an array of choice'''
+        """Returns an array of choice"""
         return self.choice
 
     def get_stim(self):
-        '''Returns an array of stimulus location'''
+        """Returns an array of stimulus location"""
         return self.stim
 
     def get_opp_contrast(self):
-        '''Returns an array of opposite contrast'''
+        """Returns an array of opposite contrast"""
         return self.cons
 
     def get_laser(self):
-        '''Returns an array of laser on/off condition'''
+        """Returns an array of laser on/off condition"""
         return self.laser
 
     def get_performance(self):
-        '''Given the data structure, return the performance in the form:
+        """Given the data structure, return the performance in the form:
         An N x 3 array where the columns correspond to
         contrast, performance left, performance right,
-        and each column is one contrast'''
+        and each column is one contrast"""
         # Load necessary arrays
         choice = self.get_choice()
         stim = self.get_stim()
@@ -132,7 +167,7 @@ class Session(object):
         return output
 
     def plot_raw_performance(self):
-        '''Plot a visualization of raw performance'''
+        """Plot a visualization of raw performance"""
         choice = self.get_choice()
         ntrials = self.ntrials
         stim = self.get_stim()
@@ -141,33 +176,33 @@ class Session(object):
         # Plot the time-outs
         timeouts = np.where(choice == 5)
         plt.figure(figsize=(20, 10))
-        plt.plot(trialstart[timeouts], stim[timeouts], 'ko')
+        plt.plot(np.arange(self.ntrials)[timeouts], stim[timeouts], 'ko')
 
         # Plot correct/incorrect trials
         corr = np.where((choice != 5) & (stim == choice))[0]
         incorr = np.where((choice != 5) & (stim != choice))[0]
-        plt.plot(trialstart[corr], stim[corr], 'bo')
-        plt.plot(trialstart[incorr], stim[incorr], 'ro')
+        plt.plot(np.arange(self.ntrials)[corr], stim[corr], 'bo')
+        plt.plot(np.arange(self.ntrials)[incorr], stim[incorr], 'ro')
 
         plt.xlabel('Time (min)')
         plt.yticks([1, 2], ['Left', 'Right'])
 
 
-    def plot_psychometric(self):
-        '''Given the data structure, plot the psychometric curve'''
+    def plot_psychometric(self, color='b', alpha=0.5):
+        """Given the data structure, plot the psychometric curve"""
         performance = self.get_performance()
-        contrast = get_struct_field(self.data, 'params', 'contrast')
+        contrast = self.contrast
         condiff = performance[:,0] - contrast
         xaxis = np.hstack([condiff, -np.flip(condiff, axis=0)])
         yaxis = np.hstack([1 - performance[:,2], np.flip(performance[:,1], axis=0)])
         #print(xaxis)
-        plt.plot(xaxis, yaxis, 'b', alpha=0.1)
+        plt.plot(xaxis, yaxis, color=color, alpha=alpha)
         plt.xlabel('Contrast difference')
         plt.ylabel('% Left')
         plt.ylim([0, 1])
 
     def find_logistic_coef(self):
-        '''Returns the logistic regression of the session'''
+        """Returns the logistic regression of the session"""
         choice = self.get_choice() - 1
         stim = self.get_stim() - 1
 
@@ -194,19 +229,102 @@ class Session(object):
         # Print the coefficients
         return np.hstack([clf.intercept_, clf.coef_.flatten()])
 
-class SessionGroup(object):
-    '''A class for groups of sessions'''
-    def __init__(self, folder):
-        '''Initialize a group of sessions'''
-        filenames = glob.glob(folder + '*.mat')
-        if len(filenames) == 0:
-            raise ValueError('No .mat files in folder')
-        self.sessions = []
-        for file in filenames:
-            session = Session(file)
-            self.sessions.append(session)
+    def make_subsession(self, trial_lst):
+        """
+        For making a subsession, given the list of trials
+        :param trial_lst: a list of trials
+        :return: a Supersession object corresponding to the indicated trials
+        """
+        if self.filename is not None:
+            subsession = Session(self.filename, trial_lst)
+        else:
+            subsession = self.copy()
+            subsession.ntrials = len(trial_lst)
+            subsession.choice = self.choice[trial_lst]
+            subsession.stim = self.stim[trial_lst]
+            subsession.cons = self.cons[trial_lst]
+            subsession.laser = self.laser[trial_lst]
+        return subsession
 
-            
+
+
+
+class SessionGroup(object):
+    """A class for groups of sessions"""
+    def __init__(self, sess_lst):
+        """Initialize a group of sessions"""
+        self.sess_lst = sess_lst
+        self.nsess = len(sess_lst)
+
+    def as_session(self):
+        """
+        Make into a Session object
+        :return:
+        """
+        return combine_multiple_sessions(self.sess_lst)
+
+    def plot_agg_performance(self):
+        plt.figure()
+        combined = combine_multiple_sessions(self.sess_lst)
+        combined.plot_psychometric()
+
+
+def concat_safe(arr1, arr2):
+    """
+    Concatenate, but handle cases of None
+    :param arr1:
+    :param arr2:
+    :return:
+    """
+    if arr1 is not None and arr2 is not None:
+        combined = np.concatenate((arr1, arr2))
+    else:
+        print('Warning: during combine sessions, encountered none in choice')
+        if arr1 is None:
+            combined = arr2
+        else:
+            combined = arr1
+    return combined
+
+# For combining sessions
+def combine_sessions(sess1, sess2):
+    """
+    Combine two sessions
+    :param sess1: a Session instance
+    :param sess2: a Session instance
+    :return: a Session object
+    """
+    sess1copy = sess1.copy()
+    sess1copy.ntrials = sess1.ntrials + sess2.ntrials
+
+    sess1copy.choice = concat_safe(sess1.choice, sess2.choice)
+    sess1copy.stim = concat_safe(sess1.stim, sess2.stim)
+    sess1copy.cons = concat_safe(sess1.cons, sess2.cons)
+    sess1copy.laser = concat_safe(sess1.laser, sess2.laser)
+    sess1copy.ordered = 0
+    sess1copy.filename = None
+    return sess1copy
+
+def combine_multiple_sessions(session_list):
+    """
+    for combining multiple sessions given by a list
+    :param session_list: a list of Session instances
+    :return: a Session object
+    """
+    if len(session_list) == 1:
+        return session_list[0]
+    else:
+        sess1copy = session_list[0].copy()
+        ntrials = sess1copy.ntrials
+        for id, session in enumerate(session_list[1:]):
+            ntrials += session.ntrials
+            sess1copy = combine_sessions(sess1copy, session)
+    assert len(sess1copy.choice) == ntrials
+    assert len(sess1copy.stim) == ntrials
+    assert len(sess1copy.cons) == ntrials
+    #assert len(sess1copy.laser) == ntrials
+    return sess1copy
+
 
 
 

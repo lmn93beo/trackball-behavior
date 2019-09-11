@@ -97,7 +97,8 @@ for i = 1:ntrials
     % resample at 100hz
     time_rs{i} = floor(min(time_ard{i})*100)/100:1/100:ceil(max(time_ard{i})*100)/100;
     t = [1;diff(time_ard{i})>0]>0;
-    ballX_rs{i} = interp1(time_ard{i}(t),ballX_ard{i}(t),time_rs{i});
+    ballX_rs{i} = int
+    erp1(time_ard{i}(t),ballX_ard{i}(t),time_rs{i});
     
     % find "easygain"
     dball = [0 diff(ballX_pc{i})];
