@@ -135,6 +135,46 @@ class Session(object):
         """Returns an array of laser on/off condition"""
         return self.laser
 
+    def print_summary(self):
+        print(self.filename)
+        # Repeated actions
+        rewarded = np.where(self.choice == self.stim)[0]
+        errors = np.where((self.choice != self.stim) & (self.choice != 5))[0]
+        if rewarded[-1] == len(self.choice) - 1:
+            rewarded_p1 = rewarded[:-1] + 1
+            rewarded = rewarded[:-1]
+        else:
+            rewarded_p1 = rewarded + 1
+
+        if errors[-1] == len(self.choice) - 1:
+            errors_p1 = errors[:-1] + 1
+            errors = errors[:-1]
+        else:
+            errors_p1 = errors + 1
+
+
+        choice_t1 = self.choice[rewarded_p1]
+        choice_t = self.choice[rewarded][choice_t1 != 5]
+        stim_t1 = self.stim[rewarded_p1][choice_t1 != 5]
+        choice_t1 = choice_t1[choice_t1 != 5]
+        assert(len(choice_t) == len(stim_t1) and len(choice_t) == len(choice_t1))
+
+        choice_error_t1 = self.choice[errors_p1]
+        choice_error_t = self.choice[errors][choice_error_t1 != 5]
+        stim_err_t1 = self.stim[errors_p1][choice_error_t1 != 5]
+        choice_error_t1 = choice_error_t1[choice_error_t1 != 5]
+        assert(len(choice_error_t1) == len(choice_error_t) and len(choice_error_t1) == len(stim_err_t1))
+
+        frac_rep = np.sum(choice_t == choice_t1) / len(choice_t)
+        frac_rep_err = np.sum(choice_error_t == choice_error_t1) / len(choice_error_t)
+        frac_corr = np.sum(choice_t1 == stim_t1) / len(choice_t)
+        frac_corr_err = np.sum(choice_error_t1 == stim_err_t1) / len(choice_error_t1)
+        print('    - Repeated fraction after correct: %.2f' % frac_rep)
+        print('    - Repeated fraction after error: %.2f' % frac_corr_err)
+
+        return frac_rep, frac_rep_err, frac_corr, frac_corr_err
+
+
     def get_performance(self):
         """Given the data structure, return the performance in the form:
         An N x 3 array where the columns correspond to
@@ -186,6 +226,29 @@ class Session(object):
 
         plt.xlabel('Time (min)')
         plt.yticks([1, 2], ['Left', 'Right'])
+
+    def plot_cumulative_bias(self, n):
+        """Cumulative bias of last n trials"""
+        choice = self.get_choice()
+        ntrials = self.ntrials
+        stim = self.get_stim()
+        trialstart = get_struct_field(self.data, 'response', 'trialstart') / 60
+
+        # Plot the time-outs
+        timeouts = np.where(choice == 5)
+        plt.figure(figsize=(20, 10))
+        plt.plot(np.arange(self.ntrials)[timeouts], stim[timeouts], 'ko')
+
+        # Plot correct/incorrect trials
+        corr = (choice != 5) & (stim == choice)
+        incorr = (choice != 5) & (stim != choice)
+        ncorr_cum = np.convolve(corr, np.ones(n), mode='valid')
+        nincorr_cum = np.convolve(incorr, np.ones(n), mode='valid')
+
+        perf_cum = ncorr_cum / (ncorr_cum + nincorr_cum)
+        plt.plot(perf_cum)
+
+        return perf_cum
 
 
     def plot_psychometric(self, color='b', alpha=0.5):
@@ -267,6 +330,38 @@ class SessionGroup(object):
         plt.figure()
         combined = combine_multiple_sessions(self.sess_lst)
         combined.plot_psychometric()
+
+    def plot_individual_psychometric(self):
+        nx = np.ceil(np.sqrt(self.nsess))
+        ny = np.ceil(self.nsess / nx)
+        for i in range(self.nsess):
+            plt.subplot(nx, ny, i + 1)
+            self.sess_lst[i].plot_psychometric()
+
+    def plot_individual_raw_performance(self):
+        T0 = 0
+        plt.figure(figsize=(20, 10))
+        for sess in self.sess_lst:
+            choice = sess.get_choice()
+            stim = sess.get_stim()
+            trialstart = get_struct_field(sess.data, 'response', 'trialstart') / 60
+            trialstart += T0
+            T0 = trialstart[-1]
+            assert(len(trialstart) == len(choice))
+
+            # Plot the time-outs
+            timeouts = np.where(choice == 5)
+            plt.plot(trialstart[timeouts], stim[timeouts], 'ko')
+
+            # Plot correct/incorrect trials
+            corr = np.where((choice != 5) & (stim == choice))[0]
+            incorr = np.where((choice != 5) & (stim != choice))[0]
+            plt.plot(trialstart[corr], stim[corr], 'bo')
+            plt.plot(trialstart[incorr], stim[incorr], 'ro')
+
+            plt.xlabel('Time (min)')
+            plt.yticks([1, 2], ['Left', 'Right'])
+            plt.vlines(T0, -1, 3)
 
 
 def concat_safe(arr1, arr2):

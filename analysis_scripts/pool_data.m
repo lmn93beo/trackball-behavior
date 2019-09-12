@@ -117,7 +117,7 @@ for i = 1:numel(all_animals)
     sess_perfC1 = 0;
     sess_perfC2 = 0;
     
-    nrows = round(sqrt(size(curr_files, 2)));
+    nrows = ceil(sqrt(size(curr_files, 2)));
     ncols = ceil(size(curr_files, 2) / nrows);
     
     for ii = 1:size(curr_files,2)
