@@ -96,6 +96,8 @@ if data.params.lever==0
          data.serial.port = 'COM7';
      elseif strcmpi(getenv('computername'),'behavior2')
          data.serial.port = 'COM1';
+     elseif strcmpi(getenv('computername'), 'BEHAVE-BALL3')
+         data.serial.port = 'COM3';
      else
          data.serial.port = 'COM7';
      end
