@@ -3,36 +3,8 @@ global data
 % antibias selects next trial
 nextstim = 0;
 nextid = 0;
-if data.params.antibiasNew
-    if k >= 10 && k+1 < data.params.numTrials
-        lastchoices = data.response.choice(k-9:k);
-        prevchoice = nan(size(lastchoices));
-        for p = 1:10
-            ix = find(data.response.choice(1:k-11+p)~=5,1,'last');
-            if ~isempty(ix)
-                prevchoice(p) = data.response.choice(ix);
-            end
-        end
-        dleftright = sum(lastchoices==1) - sum(lastchoices==2);
-        ix = find(~isnan(prevchoice) & lastchoices<5);
-        dsamediff = sum(lastchoices(ix)==prevchoice(ix)) - sum(lastchoices(ix)~=prevchoice(ix));
-        if abs(dleftright) > abs(dsamediff)
-            nextstim = (dleftright>0)+1;   
-            fprintf('L-R = %d\n',dleftright)
-        elseif abs(dleftright) < abs(dsamediff)
-            if dsamediff > 0
-                nextstim = 3-lastchoices(ix(end));
-            else
-                nextstim = lastchoices(ix(end));
-            end
-            fprintf('S-O = %d\n',dsamediff)
-        else
-            fprintf('|L-R| = |S-O| = %d\n',abs(dleftright))
-        end
-
-    end
-elseif k+1 < data.params.numTrials && data.stimuli.loc(k) < 3 && data.userFlag ~= k+1
-
+% antibias new used to be here...
+if k+1 < data.params.numTrials && data.stimuli.loc(k) < 3 && data.userFlag ~= k+1
     % if success on last trial
     if choice == data.stimuli.loc(k)
 

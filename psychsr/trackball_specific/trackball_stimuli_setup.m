@@ -1,8 +1,13 @@
 function trackball_stimuli_setup
-global data
+qglobal data
 screen = data.screen; struct_unzip(screen);
 
-x = X_pixels*0.2; % set cursor size to be 1/5 of screen width
+%x = X_pixels*0.2; % set cursor size to be 1/5 of screen width
+
+% Set cursor file to be 10 degrees
+dist = data.params.distance_to_screen_cm;
+cursor_cm = tan(data.params.cursor_size_deg / 180 * pi) * dist;
+x = cursor_cm / X_cm * X_pixels;
 y = x/ff;
 
 

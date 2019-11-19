@@ -15,6 +15,8 @@ switch getenv('computername')
         root = 'C:\Users\GSIPE\Dropbox (MIT)\gray\scripts\';
     case 'BEHAVE-BALL1'
         root = 'C:\Users\surlab\Dropbox\';
+    case 'BEHAVE-BALL3'
+        root = 'C:\Users\surlab\Dropbox\MouseAttention\Matlab';
     otherwise
         if exist('C:\Dropbox','dir') == 7
             root = 'C:\Dropbox\';
@@ -25,6 +27,8 @@ end
 
 if strcmp(getenv('computername'), 'BEHAVE-BALL1')
     directory = fullfile(root, 'Nhat/trackball-behavior');
+elseif strcmp(getenv('computername'), 'BEHAVE-BALL3')
+    directory = fullfile(root, 'trackball-behavior');
 else
     directory = [root, 'nhat'];
 end

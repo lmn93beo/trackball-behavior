@@ -1,0 +1,11 @@
+C:\Dropbox\nhat\psychsr\Protocols\psychsr_train_lick
+
+C:\Dropbox\nhat\psychsr\Protocols\psychsr_reward_calibrate
+
+# Notes:
+can have different rewards for diff. sides, for e.g:
+data.params.reward = [6 4];
+data.params.rewardProb = [1 0.5];
+
+For training, set data.params.training = 1
+data.params.trainingSide = [0 0]
