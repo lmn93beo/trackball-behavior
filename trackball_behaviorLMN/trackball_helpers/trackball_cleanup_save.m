@@ -77,9 +77,9 @@ fclose(fid);
 %% save data
 date = clock;
 if ischar(data.mouse)
-    folder = sprintf('behaviorData/mouse%s',data.mouse);
+    folder = sprintf('C:\\Users\\surlab\\Dropbox (MIT)\\trackball-behavior\\Data\\mouse%s',data.mouse);
 else
-    folder = sprintf('behaviorData/mouse%s',num2str(data.mouse));
+    folder = sprintf('C:\\Users\\surlab\\Dropbox (MIT)\\trackball-behavior\\Data\\mouse%s',num2str(data.mouse));
 end
 %folder = sprintf('behaviorData/mouse%04d',data.mouse);
 if ~isdir(folder); mkdir(folder); end

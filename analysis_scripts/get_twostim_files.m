@@ -8,7 +8,7 @@ n_files = size(all_files,1);
 for i = 3:n_files
     waitbar(i/n_files,h);
     curr_f = all_files(i).name;
-    if contains(curr_f,"_trackball_") & contains(curr_f,".mat");
+    if ~isempty(strfind(curr_f,'_trackball_')) & ~isempty(strfind(curr_f,'.mat'))
         load(curr_f);
         try
             if data.params.simultaneous & numel(data.params.opp_contrast) > 1
