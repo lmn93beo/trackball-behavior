@@ -122,6 +122,7 @@ for i = 1:numel(all_animals)
     
     for ii = 1:size(curr_files,2)
         % Load the file
+        figure;
         load(curr_files{ii});
         
         % Determine if the file belongs to condition 1 or 2
@@ -151,27 +152,28 @@ for i = 1:numel(all_animals)
         NleftL{ii} = nleftL';
          
         
-        subplot(nrows, ncols, ii);
-        l1 = plot(luminanceL, perfL, 'r');
+        %subplot(nrows, ncols, ii);
+        l1 = plot(luminanceL, perfL, 'b', 'LineWidth', 2);
         hold on;
-        l2 = plot(luminanceNL, perfNL, 'b');
+        l2 = plot(luminanceNL, perfNL, 'k', 'LineWidth', 2);
         
-        xlabel('Luminance diff.');
-        ylabel('% left selected');
+        xlabel('Luminance diff.', 'FontSize', 16);
+        ylabel('% left selected', 'FontSize', 16);
         
         filename = curr_files{ii};
         splits = strsplit(filename, '\');
         date = splits{end}(1:8);
+        title(sprintf('Session %d', ii), 'FontSize', 16)
         
-        if isfield(data.params, 'laser_power')
-            title(sprintf('Date: %s, power: %s', date, data.params.laser_power));
-        else
-            title(sprintf('Date: %s', date));
-        end
+%         if isfield(data.params, 'laser_power')
+            %title(sprintf('Date: %s, power: %s', date, data.params.laser_power));
+%         else
+            %title(sprintf('Date: %s', date));
+%         end
         
-        if ii == 6
-            legend([l1, l2], {'Laser', 'No laser'})
-        end
+%         if ii == 13
+%             legend([l1, l2], {'Laser', 'No laser'}, 'FontSize', 16)
+%         end
         box off
         set(gca,'tickdir','out','ticklength',[0.01 0],'xTick',[-0.64:0.32:0.64],'yTick',[0:0.5:1],...
             'ColorOrder', colors);
@@ -179,9 +181,14 @@ for i = 1:numel(all_animals)
         ylim([-0.1 1]);
         hline(0.5);
         vline(0);
+        
+        saveas(gcf, [num2str(all_animals) '_session', num2str(ii), '_perf.pdf']);
 
     end
 end
+
+
+
 
 %% Perform an average across days
 ntrialsNL_arr = cell2mat(NtrialsNL);
@@ -203,6 +210,22 @@ hold on
 l1 = plot(luminanceL, perfL_total, 'o', 'Color', colors(1,:));
 l2 = plot(luminanceNL, perfNL_total, 'o', 'Color', colors(2,:));
 legend([l1, l2], {'Laser', 'No laser'});
+
+
+%% Plot bias across sessions
+bias_laser = sum(nleftL_arr, 1) ./ sum(ntrialsL_arr, 1);
+bias_nolaser = sum(nleftNL_arr, 1) ./ sum(ntrialsNL_arr, 1);
+
+figure;
+plot(1- bias_laser, 'b', 'LineWidth', 2);
+hold on;
+plot(1- bias_nolaser, 'k', 'LineWidth', 2);
+xlabel('Session #', 'FontSize', 16);
+ylabel('% choose left', 'FontSize', 16);
+title(['Mouse ' num2str(all_animals)], 'FontSize', 16);
+%legend({'Laser', 'No laser'});
+    
+
 
 
 %% Save the parameters
