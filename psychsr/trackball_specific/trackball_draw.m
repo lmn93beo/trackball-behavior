@@ -6,6 +6,8 @@ yCenter = data.screen.yCenter;
 X_pixels = data.screen.X_pixels;
 Y_pixels = data.screen.Y_pixels;
 grey = data.screen.grey;
+x_cm = data.screen.X_cm;
+x_deg = atan(x_cm / data.params.distance_to_screen_cm) / pi * 180;
 w = X_pixels;
 d = data.stimuli.cursor(3);
 
@@ -81,19 +83,19 @@ switch data.params.stims{data.stimuli.id(k)}
         else
             ori = 0;
         end            
-        spf = 0.02;
+        spf = 0.2;
         tf = 2;
-        driftFlag = 1;
+        driftFlag = 0;
         
         if driftFlag
             pha = mod((now-data.response.start_time)*86400-data.response.trialstart(k),1/tf)*tf*360; % drifting
             con = 1;
         else
             pha = 0;
-            con = sin(mod((now-data.response.start_time)*86400-data.response.trialstart(k),2/tf)*tf*pi);
+            con = 1; %sin(mod((now-data.response.start_time)*86400-data.response.trialstart(k),2/tf)*tf*pi);
         end        
         
-        pixels_per_degree = 8;
+        pixels_per_degree = X_pixels / x_deg;
         spf = spf/pixels_per_degree;        
         % adjust spf for non-square pixels
         o = ori*pi/180;
@@ -112,5 +114,54 @@ switch data.params.stims{data.stimuli.id(k)}
             Screen('FillRect',window,grey,[0 0 (w-d)/4 Y_pixels])
             Screen('FillRect',window,grey,[w-(w-d)/4 0 w Y_pixels])
         end
+        
+    case 'gabor'
+        srcCenterRect = CenterRectOnPointd(data.stimuli.cursor, xCenter, yCenter);
+        dstCenterRect = CenterRectOnPointd(data.stimuli.cursor, xCenter+x, yCenter);
+        
+        gaborDimPix = X_pixels / 2;
+        % Sigma of Gaussian
+        sigma = gaborDimPix / 7;
+        
+        % Spatial Frequency (Cycles Per Pixel)
+        % One Cycle = Grey-Black-Grey-White-Grey i.e. One Black and One White Lobe
+        numCycles = 5;
+        freq = numCycles / gaborDimPix;
+
+        % Obvious Parameters
+        orientation = 0;
+        contrast = 0.8;
+        aspectRatio = 1.0;
+        phase = 0;
+        
+        % Randomise the phase of the Gabors and make a properties matrix.
+        propertiesMat = [phase, freq, sigma, contrast, aspectRatio, 0, 0, 0];
+        %         if data.stimuli.loc(k) == 2
+%             ori = 90;
+%         else
+%             ori = 0;
+%         end            
+%         spf = 0.2;
+%         tf = 2;
+%         driftFlag = 0;
+%         
+%         if driftFlag
+%             pha = mod((now-data.response.start_time)*86400-data.response.trialstart(k),1/tf)*tf*360; % drifting
+%             con = 1;
+%         else
+%             pha = 0;
+%             con = 1; %sin(mod((now-data.response.start_time)*86400-data.response.trialstart(k),2/tf)*tf*pi);
+%         end        
+%         
+%         pixels_per_degree = X_pixels / x_deg;
+%         spf = spf/pixels_per_degree;        
+%         % adjust spf for non-square pixels
+%         o = ori*pi/180;
+%         spf = spf*(1*abs(cos(o))+data.screen.ff*abs(sin(o)))./(abs(cos(o))+abs(sin(o)));
+%         
+        Screen('DrawTextures',window,data.stimuli.gabor_tex,[],dstCenterRect,orientation,[],[],[],...
+            [],kPsychDontDoRotation,propertiesMat');
+        
+    
 end
 end

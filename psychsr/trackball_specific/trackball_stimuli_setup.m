@@ -1,5 +1,5 @@
 function trackball_stimuli_setup
-qglobal data
+global data
 screen = data.screen; struct_unzip(screen);
 
 %x = X_pixels*0.2; % set cursor size to be 1/5 of screen width
@@ -47,7 +47,12 @@ data.stimuli.diamond = [-dwidth, yCenter; ...
 
 
 bg_color_offset = [0.5, 0.5, 0.5, 1];
+bg_offset_gabor = [0.5, 0.5, 0.5, 0.0];
+disableNorm = 1;
 contrast_multiplier = 0.5;
 radius = []; % full screen grating
 data.stimuli.grating_tex = CreateProceduralSineGrating(screen.window,X_pixels,Y_pixels,...
     bg_color_offset,radius,contrast_multiplier);
+
+data.stimuli.gabor_tex = CreateProceduralGabor(screen.window,X_pixels/2,X_pixels/2,...
+    [], bg_offset_gabor, disableNorm, contrast_multiplier);
