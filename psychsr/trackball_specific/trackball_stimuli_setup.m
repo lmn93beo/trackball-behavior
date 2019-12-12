@@ -1,5 +1,5 @@
 function trackball_stimuli_setup
-qglobal data
+global data
 screen = data.screen; struct_unzip(screen);
 
 %x = X_pixels*0.2; % set cursor size to be 1/5 of screen width

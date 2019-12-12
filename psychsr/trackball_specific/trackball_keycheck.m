@@ -12,7 +12,7 @@ function trackball_keycheck(k)
 % 'f' - next stim free
 % 'c' - custom
 % 'g/h' - increment/decrement perRight by 0.1
-% 'v' - toggle antibiasConsecutive
+% 'z/x' - increment/decrement reward (multiply or divide by 2)
 % 'm/n' - increment/decrement antibiasRepeat by 0.1
 % --------------------------------------------------
 
@@ -130,29 +130,37 @@ if key_press
                 last_press = 1;
             end;
             
-        % 'v' - toggle antibiasConsecutive
-        case KbName('v')
+        % 'x' - increment reward
+        case KbName('x')
             if last_press == 0
-                data.params.antibiasConsecutive = 1 - ...
-                    data.params.antibiasConsecutive;
-                fprintf('antibiasConsecutive toggled to %d\n', ...
-                    data.params.antibiasConsecutive);
+                data.params.reward = data.params.reward * 1.25;
+                fprintf('reward incremented to %d\n', ...
+                    data.params.reward);
+                last_press = 1;
+            end
+            
+        % 'z' - decrement reward
+        case KbName('z')
+            if last_press == 0
+                data.params.reward = data.params.reward / 1.25;
+                fprintf('reward decremented to %d\n', ...
+                    data.params.reward);
                 last_press = 1;
             end
             
         % 'h' - increment perRight
         case KbName('h')
             if last_press == 0
-                data.params.perRight = min(data.params.perRight + 0.1, 1);
-                fprintf('perRight incremented to %.2f\n', ...
-                    data.params.perRight);
+                data.params.trainingSide = min(data.params.trainingSide + 0.1, 1);
+                fprintf('trainingSide incremented to %.2f\n', ...
+                    data.params.trainingSide);
                 
                 % Re-populate data.stimuli.loc
-                maxrepeat = floor(log(0.125)/log(abs(data.params.perRight-0.5)+0.5)); 
-                if maxrepeat<0; maxrepeat = Inf; end;
-                
-                data.stimuli.loc((k+1):end) = ...
-    psychsr_rand(1-data.params.perRight,data.params.numTrials - k,0,maxrepeat);
+%                 maxrepeat = floor(log(0.125)/log(abs(data.params.perRight-0.5)+0.5)); 
+%                 if maxrepeat<0; maxrepeat = Inf; end;
+%                 
+%                 data.stimuli.loc((k+1):end) = ...
+%     psychsr_rand(1-data.params.perRight,data.params.numTrials - k,0,maxrepeat);
                 
                 
                 last_press = 1;
@@ -161,16 +169,16 @@ if key_press
         % 'g' - decrement perRight
         case KbName('g')
             if last_press == 0
-                data.params.perRight = max(data.params.perRight - 0.1, 0);
-                fprintf('perRight decremented to %.2f\n', ...
-                    data.params.perRight);
+                data.params.trainingSide = max(data.params.trainingSide - 0.1, 0);
+                fprintf('trainingSide decremented to %.2f\n', ...
+                    data.params.trainingSide);
                 
                 % Re-populate data.stimuli.loc
-                maxrepeat = floor(log(0.125)/log(abs(data.params.perRight-0.5)+0.5)); 
-                if maxrepeat<0; maxrepeat = Inf; end;
-                
-                data.stimuli.loc((k+1):end) = ...
-    psychsr_rand(1-data.params.perRight,data.params.numTrials - k,0,maxrepeat);
+%                 maxrepeat = floor(log(0.125)/log(abs(data.params.perRight-0.5)+0.5)); 
+%                 if maxrepeat<0; maxrepeat = Inf; end;
+%                 
+%                 data.stimuli.loc((k+1):end) = ...
+%     psychsr_rand(1-data.params.perRight,data.params.numTrials - k,0,maxrepeat);
                 
                 last_press = 1;
             end
