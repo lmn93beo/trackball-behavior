@@ -55,11 +55,11 @@ while k < data.params.numTrials && data.quitFlag==0
 %     tic;
 %     vbl = Screen('Flip', window);
     x = data.stimuli.startPos(data.stimuli.loc(k));
-    trackball_draw(k, x, [1 1 1]);
+    trackball_draw(k, x, [1 1 1]*128*(1-data.stimuli.contrast(k)));
     tic;
     vbl = Screen('Flip', window);
     
-    while toc < 1
+    while toc < 0.25
         continue
     end
     
