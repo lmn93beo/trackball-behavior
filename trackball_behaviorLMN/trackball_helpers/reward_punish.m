@@ -34,6 +34,12 @@ elseif choice == 6 % abort sound
     psychsr_sound(18);
     data.response.reward(k) = 0;
 elseif choice == data.stimuli.loc(k) || data.stimuli.loc(k)==3 % correct choice
+    data.params.reward = max(data.params.reward / 1, 3);
+    fprintf('reward decremented to %d\n', ...
+                    data.params.reward);
+               
+    
+    
     if length(data.response.reward_time)==1
         id = 1;
     else
@@ -121,6 +127,13 @@ elseif choice == data.stimuli.loc(k) || data.stimuli.loc(k)==3 % correct choice
         data.response.reward(k) = 0;
     end
 else % incorrect choice
+    new_reward = data.params.reward * 1;
+    if new_reward < 12
+        data.params.reward = new_reward;
+    end
+    fprintf('reward incremented to %d\n', ...
+                        data.params.reward)
+                    
     if data.params.lever>0
         if data.params.lev_pufftime > 0             
             outdata = data.card.dio.UserData;
@@ -128,9 +141,12 @@ else % incorrect choice
             outdata.tstart(2) = NaN;
             data.card.dio.UserData = outdata;
         end
-
+       
     elseif data.params.incorrSound > 0
-        psychsr_sound(3);
+        psychsr_sound(1);
     end
     data.response.reward(k) = 0;
+    
+    % Timeout
+    pause(3)
 end
