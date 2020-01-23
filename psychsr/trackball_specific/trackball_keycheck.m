@@ -5,6 +5,7 @@ function trackball_keycheck(k)
 % ------------- List of keys: --------------------
 % 'w' - free reward
 % 'escape' - quit after 1s hold
+% 't' - toggle sides 100% L or 100% R
 % 'q' - quit
 % 'r' - next stim right
 % 'l' - next stim left
@@ -165,7 +166,17 @@ if key_press
                 
                 last_press = 1;
             end
-        
+            
+        % 't' - toggle 100% L or 100% R
+        case KbName('t')
+            if data.stimuli.loc(k) == 1
+                data.stimuli.loc(k+1:end) = 2;
+                disp('Stimulus type toggled to ALL RIGHT')
+            elseif data.stimuli.loc(k) == 2
+                data.stimuli.loc(k+1:end) = 1;
+                disp('Stimulus type toggled to ALL LEFT')
+            end
+                
         % 'g' - decrement perRight
         case KbName('g')
             if last_press == 0
