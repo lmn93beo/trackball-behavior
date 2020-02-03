@@ -121,18 +121,20 @@ switch data.params.stims{data.stimuli.id(k)}
         
         gaborDimPix = X_pixels / 2;
         % Sigma of Gaussian
-        sigma = gaborDimPix / 7;
+        dist = data.params.distance_to_screen_cm;
+        sigma_cm = tan(data.params.gaborSigmaDeg / 180 * pi) * dist;
+        sigma_pix = sigma_cm / data.screen.X_cm * data.screen.X_pixels;
+        sigma = sigma_pix; %sigma_cm / data.screen.X_cm * data.screen.X_pixels;
         
         % Spatial Frequency (Cycles Per Pixel)
         % One Cycle = Grey-Black-Grey-White-Grey i.e. One Black and One White Lobe
-        numCycles = 5;
-        freq = numCycles / gaborDimPix;
-
+        freq = data.params.gaborCyclesPerDeg * data.params.gaborSigmaDeg / sigma_pix;
+        
         % Obvious Parameters
         orientation = 0;
         contrast = 0.8;
         aspectRatio = 1.0;
-        phase = 0;
+        phase = data.stimuli.phases(k);
         
         % Randomise the phase of the Gabors and make a properties matrix.
         propertiesMat = [phase, freq, sigma, contrast, aspectRatio, 0, 0, 0];

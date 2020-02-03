@@ -37,7 +37,7 @@ function psychsr_sound_setup()
     low_tonedata = [low_tonedata;low_tonedata];
         
     %0.1s, 10kHz
-    click = [tone_amp*sin(10000*2*pi*(0:1/Fs:0.1-1/Fs)), blank];
+    click = [tone_amp*sin(5000*2*pi*(0:1/Fs:0.1-1/Fs)), blank];
     click = [click;click];
     
     dblclick = [click, click];
