@@ -55,16 +55,18 @@ elseif choice == data.stimuli.loc(k) || data.stimuli.loc(k)==3
         data.response.reward(k) = data.params.reward(id);
 
         % potentially change block
-        if data.params.switchBlock && numel(data.response.choice) >= 10
+        nconsec = 25;
+        ncorr = 20;
+        if data.params.switchBlock && numel(data.response.choice) >= nconsec
             fprintf('Considering block switch...\n');
             % Determine performance on the past 10 trials
-            past10 = data.response.reward(end-9:end);
+            past_consec = data.response.reward(end-nconsec+1:end);
             % switch block when perf >= 80% and last 10 trials were in 1
             % direction
-            disp(data.stimuli.loc(k-9:k))
-            disp(past10)
-            disp(sum(past10 > 0))
-            if sum(past10 > 0) >= 8 && numel(unique(data.stimuli.loc(k-9:k))) == 1 
+            disp(data.stimuli.loc(k-nconsec+1:k))
+            disp(past_consec)
+            disp(sum(past_consec > 0))
+            if sum(past_consec > 0) >= ncorr && numel(unique(data.stimuli.loc(k-nconsec+1:k))) == 1 
                 if data.stimuli.loc(k) == 1
                     data.stimuli.loc(k+1:end) = 2;
                     disp('Stimulus type toggled to ALL RIGHT')
