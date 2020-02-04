@@ -10,6 +10,8 @@ cursor_cm = tan(data.params.cursor_size_deg / 180 * pi) * dist;
 x = cursor_cm / X_cm * X_pixels;
 y = x/ff;
 
+startPosCenterCm = tan(data.params.startPosDeg / 180 * pi) * dist;
+startPosCenterPix = startPosCenterCm / X_cm * X_pixels;
 
 
 if data.params.lever>0
@@ -23,8 +25,8 @@ if data.params.lever>0
     
 else
     data.stimuli.cursor = [0 0 x y];
-    data.stimuli.startPos = (X_pixels-x)/4*[1 -1 -1];
-    data.stimuli.stopPos = (X_pixels-x)/2*[1 -1];
+    data.stimuli.startPos = startPosCenterPix * [1 -1 -1]; %(X_pixels-x)/4*[1 -1 -1];
+    data.stimuli.stopPos = startPosCenterPix * 2 * [1 -1];%(X_pixels-x)/2*[1 -1];
     
     load trackball_calibration;
     id = find(strcmp(getenv('computername'),{params.pc}), 1);
@@ -49,10 +51,11 @@ data.stimuli.diamond = [-dwidth, yCenter; ...
 bg_color_offset = [0.5, 0.5, 0.5, 1];
 bg_offset_gabor = [0.5, 0.5, 0.5, 0.0];
 disableNorm = 1;
-contrast_multiplier = 0.5;
+contrast_multiplier = 1; %0.5;
 radius = []; % full screen grating
 data.stimuli.grating_tex = CreateProceduralSineGrating(screen.window,X_pixels,Y_pixels,...
     bg_color_offset,radius,contrast_multiplier);
 
-data.stimuli.gabor_tex = CreateProceduralGabor(screen.window,X_pixels/2,X_pixels/2,...
+% 2.3.20: used to be X_pixels/2, X_pixels/2 for both dimensions
+data.stimuli.gabor_tex = CreateProceduralGabor(screen.window,ceil(x),ceil(y),...
     [], bg_offset_gabor, disableNorm, contrast_multiplier);

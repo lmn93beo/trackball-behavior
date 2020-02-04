@@ -11,6 +11,8 @@ else
     data.stimuli.loc(1:data.params.nRight) = 2;
 end
 
+data.stimuli.phases = rand(1, 1000) * 360;
+
 % For a block structure
 data.stimuli.loc = repelem(data.stimuli.loc, data.params.blockSize);
 

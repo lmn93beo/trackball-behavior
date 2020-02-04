@@ -89,7 +89,7 @@ else
     data.response.reward(k) = 0;
     
     % Timeout
-    pause(3)
+    pause(2)
 end
 
 % Switch to a new block if block switching condition is satisfied
