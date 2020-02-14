@@ -50,7 +50,7 @@ psychsr_go_root();
     quinine = input('Reward ([0]) or Quinine (1)?: '); 
     
     if isempty(quinine) || ~quinine
-        load psychsr_reward_params;
+        load psychsr_reward_paramsLMN.mat;
     else
         load psychsr_quinine_params;
     end        
@@ -144,7 +144,7 @@ psychsr_go_root();
         params(id).dw = dw;
         params(id).b = b;        
         if isempty(quinine) || ~quinine
-            save('./psychsr/psychsr_reward_params','params');
+            save('./psychsr/psychsr_reward_paramsLMN','params');
         else
             save('./psychsr/psychsr_quinine_params','params');            
         end

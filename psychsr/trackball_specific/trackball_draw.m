@@ -132,7 +132,7 @@ switch data.params.stims{data.stimuli.id(k)}
         
         % Obvious Parameters
         orientation = 0;
-        contrast = 0.8;
+        contrast = data.stimuli.contrast(k);
         aspectRatio = 1.0;
         phase = data.stimuli.phases(k);
         
