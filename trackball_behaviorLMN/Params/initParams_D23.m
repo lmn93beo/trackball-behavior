@@ -18,6 +18,9 @@ data.params.antibiasConsecutive = 1;
 data.params.antibiasRepeat = 0.6;
 data.params.antibiasSwitch = 0;
 
+data.params.distance_to_screen_cm = 20;
+data.params.cursor_size_deg = 10;
+
 
 data.params.responseTime = 10;
      
