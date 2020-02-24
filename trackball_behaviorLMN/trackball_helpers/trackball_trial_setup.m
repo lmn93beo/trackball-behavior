@@ -136,6 +136,17 @@ if numel(data.params.goDelay) > 1 % -- RH, to account for laser stim for variabl
 end
 data.stimuli.sound = zeros(size(data.stimuli.loc));
 
+if data.params.switchBlockExp
+    data.stimuli.loc = [];
+    blocksizes = ceil(exprnd(20, 1000, 1));
+    blocksizes = blocksizes(blocksizes > 10 & blocksizes < 30);
+    ctr = 0;
+    for id = 1:numel(blocksizes)
+        ctr = mod(ctr + 1, 2);
+        data.stimuli.loc = [data.stimuli.loc ones(1, blocksizes(id)) * ctr + 1];
+    end
+end
+
 
 %% Initiate some empty structures
 data.response.nsampled = 0; % ai samples
